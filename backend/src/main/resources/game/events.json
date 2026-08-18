@@ -898,6 +898,7 @@
         "id": "B",
         "text": "打开炒股 App。",
         "effects": { "mind": -1 },
+        "tags": ["slack"],
         "followUp": "E42"
       },
       {
@@ -990,6 +991,82 @@
         "id": "D",
         "text": "起身，该干活了。",
         "effects": { "mind": 4, "hp": 2 }
+      }
+    ]
+  },
+  {
+    "id": "E30",
+    "type": "BOSS",
+    "weight": 0,
+    "once": true,
+    "careers": ["ALL"],
+    "title": "他今天专门绕到你工位",
+    "description": "不提加班。只把别人的活挪到你桌上。茶还是昨天那杯。",
+    "options": [
+      {
+        "id": "A",
+        "text": "接了。今晚再熬。",
+        "effects": { "boss": 8, "ability": 3, "hp": -14, "mind": -6 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "B",
+        "text": "说这不是我的范围。",
+        "effects": { "boss": -12, "mind": 4 },
+        "followUp": "E21"
+      },
+      {
+        "id": "C",
+        "text": "笑着应，转头摸鱼。",
+        "effects": { "slack": 8, "boss": -6, "mind": 2 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "D",
+        "text": "晚上把文档丢回群里。",
+        "effects": { "ability": 2, "hp": -8, "slack": 3, "boss": -4 },
+        "tags": ["overtime"]
+      }
+    ]
+  },
+  {
+    "id": "E32",
+    "type": "LIFE",
+    "weight": 0,
+    "once": true,
+    "requireFlag": "girlfriend",
+    "forbidFlag": "married",
+    "careers": ["ALL"],
+    "title": "她发来一条语音",
+    "description": "「今晚能不能见一面？不想再隔着屏幕。」未读红点停在那里。",
+    "options": [
+      {
+        "id": "A",
+        "text": "去。把工位的灯关掉。",
+        "effects": { "mind": 8, "hp": -4, "money": -200 },
+        "followUp": "E45"
+      },
+      {
+        "id": "B",
+        "text": "回她：今晚还在加班。",
+        "effects": { "mind": -8, "boss": 4, "hp": -6 },
+        "tags": ["overtime"],
+        "hiddenFlag": "gfBond",
+        "hiddenDelta": -4
+      },
+      {
+        "id": "C",
+        "text": "视频凑合一下。",
+        "effects": { "mind": 4, "slack": 2 },
+        "hiddenFlag": "gfBond",
+        "hiddenDelta": 1
+      },
+      {
+        "id": "D",
+        "text": "已读。先睡。",
+        "effects": { "mind": -10, "hp": 6 },
+        "hiddenFlag": "gfBond",
+        "hiddenDelta": -8
       }
     ]
   },
@@ -1175,13 +1252,13 @@
   {
     "id": "E45",
     "type": "LIFE",
-    "weight": 6,
+    "weight": 0,
     "once": true,
-    "minMoney": 25000,
+    "requireFlag": "girlfriend",
     "forbidFlag": "married",
     "careers": ["ALL"],
-    "title": "相亲对象把菜单推过来",
-    "description": "「你加班多吗？」她问得很轻。酒宴按 4.8 万在谈。",
+    "title": "她把菜单推过来",
+    "description": "不是相亲。是你聊了很久的那个人。「你加班多吗？」酒宴还是按 4.8 万在谈。",
     "options": [
       {
         "id": "A",

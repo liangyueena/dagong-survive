@@ -286,6 +286,36 @@ public class GameEngineTest {
         assertTrue(state.getAttrs().getMind() >= mind);
     }
 
+    @Test
+    public void overtimeLaterGetsTheBossShoe() {
+        GameState state = engine.start("u1", "programmer");
+        state.getFlags().put("overtime_debt", Integer.valueOf(2));
+        engine.choose(state, "B");
+        assertEquals("E30", state.getCurrentEventId());
+        engine.choose(state, "A");
+        assertTrue(state.getFlags().get("overtime_debt") == null
+                || state.getFlags().get("overtime_debt").intValue() < 2);
+        assertTrue(state.getUsedEventIds().contains("E30"));
+    }
+
+    @Test
+    public void chattingHerAsksToMeetThenDinner() {
+        GameState state = engine.start("u1", "programmer");
+        engine.startChat(state, "你是刚下班吗？");
+        engine.chat(state, "刚到工位", "少摸鱼。");
+        engine.chat(state, "今晚有空吗", "看你。");
+        engine.chat(state, "想听你说话", "那你先把活干完。");
+        assertTrue(state.getFlags().get("gfBond").intValue() >= 6);
+        state.setCurrentEventId("E60");
+        engine.choose(state, "C");
+        assertEquals("E32", state.getCurrentEventId());
+        engine.choose(state, "A");
+        assertEquals("E45", state.getCurrentEventId());
+        engine.choose(state, "B");
+        assertEquals("E61", state.getCurrentEventId());
+        assertTrue(state.getUsedEventIds().contains("E32"));
+    }
+
     private String firstOpenOption(GameState state, EventDef event) {
         String id = event.getId();
         if ("E27".equals(id) || "E28".equals(id) || "E29".equals(id) || "E42".equals(id)) {

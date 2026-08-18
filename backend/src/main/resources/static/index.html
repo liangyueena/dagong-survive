@@ -1321,6 +1321,9 @@
       const app = document.getElementById("app");
       if (!app || document.getElementById("patrol")) return;
       const g = state.game;
+      const debt = (g.flags && g.flags.slack_debt) || 0;
+      if (debt < 3) return;
+      if (g.event && g.event.id === "E30") return;
       const work = g.workApp || "IDEA";
       const names = g.event.apps || ["IDEA", "Excel", "微信", "股票", "小说"];
       const tiles = names.map(function (name) {
@@ -1352,7 +1355,7 @@
             if (!state.patrolLock) switchWindow(false, false);
           }
         }, 1000);
-      }, 10000);
+      }, Math.max(4000, 10000 - debt * 800));
     }
     async function afterSettle() {
       const g = state.game;

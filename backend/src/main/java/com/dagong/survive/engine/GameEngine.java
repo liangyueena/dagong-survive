@@ -282,6 +282,7 @@ public class GameEngine {
         effects.put("mind", Integer.valueOf(2));
         if (flag(state, "atOffice") > 0) {
             effects.put("slack", Integer.valueOf(4));
+            addFlag(state, "slack_debt", 1);
         }
         Map<String, Integer> applied = state.getAttrs().apply(effects);
         ChoiceResult result = new ChoiceResult();
@@ -390,6 +391,7 @@ public class GameEngine {
             applied.put("money", Integer.valueOf(0));
         }
         applied.put("day", Integer.valueOf(dayGain));
+        noteChoiceDebts(state, tags, event);
 
         if (state.getAttrs().getBoss() <= 0 && flag(state, GameConstants.FLAG_JOBLESS) == 0
                 && state.getAttrs().getMind() > 0) {
@@ -639,6 +641,16 @@ public class GameEngine {
         if ("E61".equals(id) || "E62".equals(id)) {
             state.getFlags().put("atOffice", Integer.valueOf(1));
             state.getFlags().put("officeBeat", Integer.valueOf(0));
+            if (flag(state, "overtime_debt") >= 2 && !state.getUsedEventIds().contains("E30")) {
+                state.setQueuedEventId("E30");
+            }
+            return;
+        }
+        if ("E32".equals(id) || "E45".equals(id)) {
+            state.getFlags().put("atOffice", Integer.valueOf(0));
+            if (state.getQueuedEventId() == null) {
+                state.setQueuedEventId("E61");
+            }
             return;
         }
         if ("E70".equals(id)) {
@@ -693,7 +705,7 @@ public class GameEngine {
         if ("E42".equals(id) && flag(state, "atOffice") == 0) {
             return true;
         }
-        if (isNightId(id) || "E41".equals(id) || "E28".equals(id) || "E29".equals(id)) {
+        if (isNightId(id) || "E32".equals(id) || "E45".equals(id) || "E41".equals(id) || "E28".equals(id) || "E29".equals(id)) {
             if (flag(state, "atOffice") > 0) {
                 return false;
             }
@@ -709,6 +721,12 @@ public class GameEngine {
     }
 
     private String pickNight(GameState state) {
+        if (flag(state, GameConstants.FLAG_GIRLFRIEND) > 0
+                && flag(state, GameConstants.FLAG_MARRIED) == 0
+                && flag(state, "gfBond") >= 6
+                && !state.getUsedEventIds().contains("E32")) {
+            return "E32";
+        }
         String[] nights = new String[] { "E26", "E81", "E82", "E83", "E84", "E85" };
         int last = flag(state, "lastNight");
         int idx = random.nextInt(nights.length);
@@ -815,8 +833,12 @@ public class GameEngine {
                     weight += hunt;
                 }
             }
-            if (deskOnly && "E15".equals(event.getId())) {
-                weight += 20;
+            if ("E15".equals(event.getId())) {
+                int slackDebt = flag(state, "slack_debt");
+                if (slackDebt < 3) {
+                    continue;
+                }
+                weight += slackDebt * 6;
             }
             pool.add(new Weighted(event, weight));
         }
@@ -833,6 +855,29 @@ public class GameEngine {
 
     private void addFlag(GameState state, String key, int delta) {
         state.getFlags().put(key, flag(state, key) + delta);
+    }
+
+    private void noteChoiceDebts(GameState state, List<String> tags, EventDef event) {
+        if (tags != null) {
+            if (tags.contains(GameConstants.TAG_OVERTIME)) {
+                addFlag(state, "overtime_debt", 1);
+            }
+            if (tags.contains(GameConstants.TAG_SLACK)) {
+                addFlag(state, "slack_debt", 1);
+            }
+        }
+        if ("E15".equals(event.getId())) {
+            addFlag(state, "slack_debt", -3);
+            if (flag(state, "slack_debt") < 0) {
+                state.getFlags().put("slack_debt", Integer.valueOf(0));
+            }
+        }
+        if ("E30".equals(event.getId())) {
+            addFlag(state, "overtime_debt", -2);
+            if (flag(state, "overtime_debt") < 0) {
+                state.getFlags().put("overtime_debt", Integer.valueOf(0));
+            }
+        }
     }
 
     private void merge(Map<String, Integer> target, Map<String, Integer> extra) {
