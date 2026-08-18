@@ -879,6 +879,121 @@
     ]
   },
   {
+    "id": "E27",
+    "type": "SLACK",
+    "weight": 16,
+    "repeatable": true,
+    "careers": ["ALL"],
+    "title": "工位这会儿没人盯着",
+    "description": "需求还在。群里安静了。你可以先把自己活过来。",
+    "options": [
+      {
+        "id": "A",
+        "text": "打开抖音。",
+        "effects": { "slack": 2 },
+        "tags": ["slack"],
+        "followUp": "E28"
+      },
+      {
+        "id": "B",
+        "text": "打开炒股 App。",
+        "effects": { "mind": -1 },
+        "followUp": "E42"
+      },
+      {
+        "id": "C",
+        "text": "椅背上打坐。",
+        "effects": { "slack": 2 },
+        "followUp": "E29"
+      },
+      {
+        "id": "D",
+        "text": "把肩膀摆正，继续敲。",
+        "effects": { "ability": 2, "mind": -2, "slack": -2 }
+      }
+    ]
+  },
+  {
+    "id": "E28",
+    "type": "SLACK",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "phone",
+    "careers": ["ALL"],
+    "title": "抖音停不下来",
+    "description": "下一条自动播放。耳机里是别人的加班。",
+    "options": [
+      {
+        "id": "A",
+        "text": "再滑一条。",
+        "effects": { "slack": 4, "mind": 3, "hp": -2, "ability": -1 },
+        "tags": ["slack"],
+        "followUp": "E28",
+        "chancePercent": 20,
+        "chanceEffects": { "boss": -8 },
+        "chanceText": "隔壁探了一下头。你假装在回消息。"
+      },
+      {
+        "id": "B",
+        "text": "看完「月入三万的打工人日常」。",
+        "effects": { "slack": 6, "mind": -3, "hp": -3 },
+        "tags": ["slack"],
+        "chancePercent": 30,
+        "chanceEffects": { "mind": 8 },
+        "chanceText": "评论区全是「编的」。你还是看完了。"
+      },
+      {
+        "id": "C",
+        "text": "给同事的作品点赞。",
+        "effects": { "mind": 5, "slack": 3 },
+        "chancePercent": 18,
+        "chanceEffects": { "boss": -6 },
+        "chanceText": "他秒回：你也在摸鱼啊。"
+      },
+      {
+        "id": "D",
+        "text": "关掉，切回工作软件。",
+        "effects": { "slack": 2, "mind": 2 }
+      }
+    ]
+  },
+  {
+    "id": "E29",
+    "type": "SLACK",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "life",
+    "careers": ["ALL"],
+    "title": "椅背上打坐",
+    "description": "腰挺直。眼皮盖上。工位的空调声突然很大。",
+    "options": [
+      {
+        "id": "A",
+        "text": "再坐一会儿。",
+        "effects": { "hp": 3, "mind": 6, "slack": 3 },
+        "followUp": "E29"
+      },
+      {
+        "id": "B",
+        "text": "数呼吸，脸上保持「我在想方案」。",
+        "effects": { "mind": 8, "slack": 4, "ability": 1 }
+      },
+      {
+        "id": "C",
+        "text": "被拍肩膀，赶紧睁眼。",
+        "effects": { "mind": -3, "slack": 2, "boss": -2 },
+        "chancePercent": 40,
+        "chanceEffects": { "boss": -6 },
+        "chanceText": "是老板。他说你休息得不错。"
+      },
+      {
+        "id": "D",
+        "text": "起身，该干活了。",
+        "effects": { "mind": 4, "hp": 2 }
+      }
+    ]
+  },
+  {
     "id": "E40",
     "type": "LIFE",
     "weight": 0,
@@ -924,8 +1039,9 @@
       {
         "id": "A",
         "text": "刷抖音，停不下来。",
-        "effects": { "slack": 10, "mind": 6, "hp": -5, "ability": -2 },
-        "tags": ["slack"]
+        "effects": { "slack": 4, "mind": 2, "hp": -2 },
+        "tags": ["slack"],
+        "followUp": "E28"
       },
       {
         "id": "B",

@@ -418,7 +418,7 @@ public class GameEngine {
                 && attrs.getBoss() > props.getOilBoss()) {
             return GameConstants.ENDING_OIL;
         }
-        return GameConstants.ENDING_FIRED;
+        return GameConstants.ENDING_WORKER;
     }
 
     private void finish(GameState state, String endingId) {
@@ -605,8 +605,12 @@ public class GameEngine {
             return;
         }
         if (event.isRepeatable()) {
+            if (("E28".equals(id) || "E29".equals(id) || "E42".equals(id))
+                    && flag(state, "atOffice") > 0) {
+                return;
+            }
             if (isNightId(id) || "E40".equals(id) || "E41".equals(id) || "E42".equals(id)
-                    || "E48".equals(id)) {
+                    || "E48".equals(id) || "E28".equals(id) || "E29".equals(id)) {
                 state.setQueuedEventId("E61");
             }
             return;
@@ -631,10 +635,16 @@ public class GameEngine {
 
     private boolean isEveningWrap(EventDef event, GameState state) {
         String id = event.getId();
-        if ("E40".equals(id) || "E42".equals(id) || "E48".equals(id)) {
+        if ("E40".equals(id) || "E48".equals(id)) {
             return true;
         }
-        if (isNightId(id) || "E41".equals(id)) {
+        if ("E42".equals(id) && flag(state, "atOffice") == 0) {
+            return true;
+        }
+        if (isNightId(id) || "E41".equals(id) || "E28".equals(id) || "E29".equals(id)) {
+            if (flag(state, "atOffice") > 0) {
+                return false;
+            }
             String queued = state.getQueuedEventId();
             return queued == null || "E61".equals(queued);
         }

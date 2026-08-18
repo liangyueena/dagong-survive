@@ -31,7 +31,7 @@ spring:
 
 app:
   store: memory
-  events-per-run: 10
+  events-per-run: 20
   skill-every: 2
   day-min: 20
   day-max: 50

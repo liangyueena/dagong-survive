@@ -343,9 +343,9 @@
       background: rgba(12, 16, 24, .92); border: 1px solid #2c3544; border-radius: 12px;
       padding: 10px 12px; animation: rise .35s ease; flex: 0 0 auto;
     }
-    .who { font-size: 11px; color: var(--accent); margin-bottom: 4px; letter-spacing: 1px; }
-    .spoken { font-size: 16px; line-height: 1.45; min-height: 24px; }
-    .scene-cap { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .who { font-size: 15px; color: var(--accent); margin-bottom: 4px; letter-spacing: 1px; }
+    .spoken { font-size: 18px; line-height: 1.5; min-height: 24px; }
+    .scene-cap { font-size: 15px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
     .talk-ui {
       position: absolute; left: 6%; right: 6%; bottom: 4%; z-index: 14;
       display: flex; flex-direction: column; gap: 8px; max-height: 48%;
@@ -356,8 +356,8 @@
     }
     .talk-choices.show { opacity: 1; }
     .talk-choices button {
-      width: 100%; text-align: left; border: 0; border-radius: 10px; padding: 9px 12px;
-      background: rgba(30, 38, 51, .96); color: var(--text); margin: 0 0 6px; cursor: pointer; font-size: 13px;
+      width: 100%; text-align: left; border: 0; border-radius: 10px; padding: 12px 14px;
+      background: rgba(30, 38, 51, .96); color: var(--text); margin: 0 0 8px; cursor: pointer; font-size: 16px;
     }
 
     .title { font-size: 22px; margin: 6px 0 8px; }
@@ -379,9 +379,9 @@
     }
     .tag { font-size: 10px; color: #8ab4ff; letter-spacing: 1px; }
     .choices button {
-      width: 100%; text-align: left; border: 0; border-radius: 10px; padding: 10px 12px;
+      width: 100%; text-align: left; border: 0; border-radius: 10px; padding: 12px 14px;
       background: #1e2633; color: var(--text); margin: 0 0 8px; cursor: pointer;
-      animation: rise .4s ease both; font-size: 13px;
+      animation: rise .4s ease both; font-size: 16px;
     }
     .choices button:nth-child(1) { animation-delay: .05s; }
     .choices button:nth-child(2) { animation-delay: .12s; }
@@ -657,7 +657,7 @@
     }
     function phoneUp() {
       const e = state.game && state.game.event;
-      return state.scene === "play" && e && e.type === "SLACK" && !state.phoneDown;
+      return state.scene === "play" && e && (e.type === "SLACK" || e.ui === "phone") && !state.phoneDown;
     }
     function dropPhone() {
       state.phoneDown = true;
@@ -797,16 +797,13 @@
         if (e.id === "E60") {
           options.unshift({ id: "A", text: "打车回家，35。", minMoney: 35 });
         }
-        if (e.id === "E61") {
-          const taxi = [];
-          const rest = [];
-          options.forEach(function (o) {
-            if (o.id === "D") taxi.push(o);
-            else rest.push(o);
-          });
-          options = taxi.concat(rest);
-        }
       }
+      options = options.map(function (o, i) {
+        const copy = {};
+        for (const k in o) copy[k] = o[k];
+        copy.label = String.fromCharCode(65 + i);
+        return copy;
+      });
       return choiceButtons(options);
     }
     function choiceButtons(options) {
@@ -817,7 +814,8 @@
       }).map(function (o) {
         const noMoney = o.minMoney && money < o.minMoney;
         const extra = noMoney ? " · 钱不够" : "";
-        return "<button class='" + (noMoney ? "opt-lock" : "") + "' onclick='choose(\"" + o.id + "\")'>[ " + o.id + " ]  " + o.text + extra + "</button>";
+        const mark = o.label || o.id;
+        return "<button class='" + (noMoney ? "opt-lock" : "") + "' onclick='choose(\"" + o.id + "\")'>[ " + mark + " ]  " + o.text + extra + "</button>";
       }).join("") + "</div>";
     }
 
@@ -1125,6 +1123,10 @@
         return { tag: "路上", lead: "这一段路已经走完了。", commute: true };
       }
       if (id === "E70") return { tag: "发薪", lead: "扣完五险一金，就是这些。", commute: false };
+      if (id === "E27") return { tag: "摸鱼", lead: "屏幕又亮回工作软件。", commute: false };
+      if (id === "E28") return { tag: "抖音", lead: "你把手机扣过去了。", commute: false };
+      if (id === "E29") return { tag: "打坐", lead: "眼睛睁开。工位还在。", commute: false };
+      if (id === "E42" && flags().atOffice) return { tag: "股票", lead: "K 线先放到一边。", commute: false };
       if (ui === "life" || ui === "meal" || ui === "phone" || id === "E26" || id === "E40" || id === "E41" || id === "E42") {
         return { tag: "晚上", lead: "今天到这里。", commute: false };
       }
@@ -1277,7 +1279,7 @@
         "存款：" + fmt(a.money),
         "年限：" + years + " 年",
         "",
-        "「" + (ed.name || "被优化") + "」",
+        "「" + (ed.name || "普通打工人") + "」",
         "",
         hook
       ].concat(ed.lines || []).join("<br/>");

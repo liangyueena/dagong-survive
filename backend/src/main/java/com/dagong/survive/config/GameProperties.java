@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class GameProperties {
 
     private String store = "memory";
-    private int eventsPerRun = 16;
+    private int eventsPerRun = 20;
     private int skillEvery = 2;
     private int dayMin = 20;
     private int dayMax = 50;

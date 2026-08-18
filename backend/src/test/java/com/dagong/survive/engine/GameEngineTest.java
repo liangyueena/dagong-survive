@@ -1,6 +1,7 @@
 package com.dagong.survive.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -65,10 +66,25 @@ public class GameEngineTest {
     }
 
     @Test
-    public void tenEventsShouldEnd() {
+    public void fullRunWithoutCollapseEndsAsWorker() {
+        GameState state = engine.start("u1", "programmer");
+        state.setEventCount(20);
+        assertEquals("worker", engine.resolveEnding(state, true));
+        state.getAttrs().setMind(0);
+        assertEquals("mental", engine.resolveEnding(state, true));
+        state.getAttrs().setMind(75);
+        state.getAttrs().setBoss(0);
+        assertEquals("fired", engine.resolveEnding(state, true));
+        state.getAttrs().setBoss(50);
+        state.getFlags().put("jobless", Integer.valueOf(1));
+        assertEquals("fired", engine.resolveEnding(state, true));
+    }
+
+    @Test
+    public void twentyEventsShouldEnd() {
         GameState state = engine.start("u1", "programmer");
         int guard = 0;
-        while ("PLAYING".equals(state.getStatus()) && guard++ < 120) {
+        while ("PLAYING".equals(state.getStatus()) && guard++ < 240) {
             EventDef event = engine.currentEvent(state);
             if (event == null) {
                 break;
@@ -84,6 +100,10 @@ public class GameEngineTest {
         assertEquals("ENDED", state.getStatus());
         assertNotNull(state.getEndingId());
         assertTrue(state.getSkills().size() >= 1);
+        if (state.getFlags().get("jobless") == null && state.getAttrs().getMind() > 0
+                && state.getAttrs().getBoss() > 0) {
+            assertNotEquals("fired", state.getEndingId());
+        }
     }
 
     @Test
@@ -224,7 +244,41 @@ public class GameEngineTest {
         assertTrue(state.getAttrs().getMoney() >= before + 8000);
     }
 
+    @Test
+    public void deskSlackCanPlayDouyinStocksMeditate() {
+        GameState state = engine.start("u1", "programmer");
+        state.getFlags().put("atOffice", Integer.valueOf(1));
+        state.setCurrentEventId("E27");
+        engine.choose(state, "A");
+        assertEquals("E28", state.getCurrentEventId());
+        engine.choose(state, "A");
+        assertEquals("E28", state.getCurrentEventId());
+        engine.choose(state, "D");
+        assertEquals(1, state.getDay());
+        assertNotEquals("E61", state.getCurrentEventId());
+
+        state.setCurrentEventId("E27");
+        engine.choose(state, "B");
+        assertEquals("E42", state.getCurrentEventId());
+        engine.choose(state, "D");
+        assertEquals(1, state.getDay());
+        assertNotEquals("E61", state.getCurrentEventId());
+
+        state.setCurrentEventId("E27");
+        engine.choose(state, "C");
+        assertEquals("E29", state.getCurrentEventId());
+        engine.choose(state, "A");
+        assertEquals("E29", state.getCurrentEventId());
+        engine.choose(state, "D");
+        assertEquals(1, state.getDay());
+        assertNotEquals("E61", state.getCurrentEventId());
+    }
+
     private String firstOpenOption(GameState state, EventDef event) {
+        String id = event.getId();
+        if ("E27".equals(id) || "E28".equals(id) || "E29".equals(id) || "E42".equals(id)) {
+            return "D";
+        }
         for (OptionDef option : event.getOptions()) {
             if (option.getRequireFlag() != null) {
                 Integer value = state.getFlags().get(option.getRequireFlag());

@@ -21,6 +21,7 @@ public final class GameConstants {
     public static final String ENDING_MENTAL = "mental";
     public static final String ENDING_FIRED = "fired";
     public static final String ENDING_HOME = "home";
+    public static final String ENDING_WORKER = "worker";
     public static final String FLAG_HOUSE = "house";
     public static final String FLAG_CAR = "car";
     public static final String FLAG_MARRIED = "married";
