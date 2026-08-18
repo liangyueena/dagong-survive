@@ -28,8 +28,6 @@ spring:
     host: 127.0.0.1
     port: 6379
     timeout: 2000ms
-  config:
-    import: optional:classpath:application-secret.yml
 
 app:
   store: memory
@@ -45,7 +43,7 @@ app:
   oil-slack: 80
   oil-mind: 80
   oil-boss: 30
-  qwen-api-key: ${QWEN_API_KEY:}
+  qwen-api-key: sk-8e29c9af34b24a128c90827a03ef83aa
   qwen-model: qwen-turbo
   qwen-url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
 

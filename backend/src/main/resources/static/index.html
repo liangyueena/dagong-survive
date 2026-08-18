@@ -689,6 +689,14 @@
     }
     .punch-btn:active { transform: scale(.98); }
     .fight-meta { color: var(--accent); margin-bottom: 8px; font-size: 14px; }
+    .trash-talk { position: absolute; inset: 0; pointer-events: none; z-index: 8; }
+    .trash-talk span {
+      position: absolute; font-size: 16px; font-weight: 700; white-space: nowrap;
+      text-shadow: 0 1px 0 #000, 0 0 10px rgba(0,0,0,.7);
+      animation: roastPop 1.25s ease-out forwards;
+    }
+    .trash-talk span.me { color: #cfe8c8; }
+    .trash-talk span.them { color: #f3d27a; }
     @keyframes hitL { 0% { transform: none; } 50% { transform: translate(36px, -14px) rotate(10deg); } 100% { transform: none; } }
     @keyframes hitR { 0% { transform: none; } 50% { transform: translate(-36px, -12px) rotate(-10deg); } 100% { transform: none; } }
     @keyframes jabR { 0% { transform: none; } 50% { transform: translate(42px, -8px) scale(1.15); } 100% { transform: none; } }
@@ -1507,6 +1515,7 @@
             "<div class='fighter foe' id='foeF'>" + personHtml({ role: foe.role, mood: "angry", speaking: true }) + "<div class='fname'>" + foe.name + "</div></div>" +
             "<div class='fp-fist l' id='youF'></div><div class='fp-fist r' id='youR'></div>" +
             "<div class='cup'></div>" +
+            "<div class='trash-talk' id='trashTalk'></div>" +
             "<div class='fx' id='fx'>砰</div>" +
           "</div></div></div>" + hud() +
         "<div class='fight-ui'><div class='timer-bar'><i></i></div>" +
@@ -1518,6 +1527,35 @@
       const foe = document.getElementById("hpFoe");
       if (you) you.style.width = Math.max(0, state.hpYou) + "%";
       if (foe) foe.style.width = Math.max(0, state.hpFoe) + "%";
+    }
+    const TRASH = {
+      boss: {
+        me: ["加班你自己去！", "别拿需求压我", "监控看着呢", "你先动手的", "这茶水间归我了"],
+        them: ["你完了", "明天HR见", "还敢顶嘴", "绩效给你打D", "给我老实加班"]
+      },
+      colleague: {
+        me: ["你推给我？", "工牌掉了啊", "别装无辜", "过道上见", "上次就是你"],
+        them: ["你行你上啊", "甩锅高手", "监控拍到了", "有种再来", "同事都看着"]
+      }
+    };
+    function spitTrash(youHit) {
+      const vsCol = state.game && state.game.event && (state.game.event.id === "E24" || state.game.event.id === "E99");
+      const pack = vsCol ? TRASH.colleague : TRASH.boss;
+      const list = youHit ? pack.me : pack.them;
+      const text = list[(state.fightHits || 0) % list.length];
+      const box = document.getElementById("trashTalk");
+      if (box) {
+        const el = document.createElement("span");
+        el.className = youHit ? "me" : "them";
+        el.textContent = text;
+        el.style.left = youHit ? (10 + Math.random() * 22) + "%" : (42 + Math.random() * 22) + "%";
+        el.style.top = youHit ? (58 + Math.random() * 12) + "%" : (8 + Math.random() * 18) + "%";
+        box.appendChild(el);
+        setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 1300);
+      }
+      const meta = document.getElementById("fightMeta");
+      const who = youHit ? "你" : (vsCol ? "同事" : "老板");
+      if (meta) meta.textContent = who + "：" + text;
     }
     function hitFx(text, youHit) {
       const you = document.getElementById("youF");
@@ -1549,14 +1587,13 @@
         setTimeout(function () { fp.classList.remove("hit"); }, 180);
       }
       setHp();
+      spitTrash(youHit);
     }
     function punchFight() {
       if (state.fightLock) return;
       state.fightHits = (state.fightHits || 0) + 1;
       state.hpFoe = Math.max(0, (state.hpFoe || 100) - 16);
       hitFx(["砰", "啪", "咚"][state.fightHits % 3], true);
-      const meta = document.getElementById("fightMeta");
-      if (meta) meta.textContent = "出拳 " + state.fightHits + " 次 · 再快点";
     }
     function startFightClock() {
       if (state.fightTimerStarted) return;
