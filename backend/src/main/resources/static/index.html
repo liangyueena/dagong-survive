@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>打工人：活下去</title>
+  <style>
+    :root {
+      --text: #e8e6dc;
+      --muted: #8b9288;
+      --accent: #e6c36a;
+      --danger: #d36a6a;
+      --ok: #7dba86;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #0a0c10; color: var(--text); font-family: "PingFang SC", "Noto Sans SC", sans-serif; overflow: hidden; }
+    body { display: flex; justify-content: center; }
+    #app { width: 100%; max-width: 430px; height: 100%; position: relative; overflow: hidden; }
+    button { font-family: inherit; }
+    .back { background: none; border: 0; color: var(--muted); padding: 0; cursor: pointer; }
+    input { width: 100%; background: #1c212b; color: var(--text); border: 1px solid #333; border-radius: 8px; padding: 10px; }
+
+    .fp { position: absolute; inset: 0; background: #141820; }
+    .fp-cam {
+      position: absolute; inset: 0;
+      transform-origin: 50% 58%;
+      will-change: transform;
+    }
+    .fp-breathe {
+      position: absolute; inset: 0;
+      animation: breathe 4.5s ease-in-out infinite;
+    }
+    .ceiling {
+      position: absolute; left: -10%; right: -10%; top: 0; height: 22%;
+      background: linear-gradient(#2a3140, #1c232e);
+      clip-path: polygon(8% 100%, 92% 100%, 100% 0, 0 0);
+    }
+    .lamp {
+      position: absolute; left: 28%; top: 2%; width: 44%; height: 14px;
+      background: #f3e2a8; border-radius: 0 0 8px 8px; opacity: .55;
+      box-shadow: 0 40px 80px 30px rgba(243, 226, 168, .16);
+      animation: flicker 6s ease-in-out infinite;
+    }
+    .wall-l, .wall-r {
+      position: absolute; top: 12%; bottom: 28%; width: 18%;
+      background: #3d4a5c;
+    }
+    .wall-l { left: 0; clip-path: polygon(0 0, 100% 8%, 100% 100%, 0 100%); box-shadow: inset -18px 0 24px rgba(0,0,0,.25); }
+    .wall-r { right: 0; clip-path: polygon(0 8%, 100% 0, 100% 100%, 0 100%); box-shadow: inset 18px 0 24px rgba(0,0,0,.25); }
+    .window {
+      position: absolute; right: 3%; top: 16%; width: 13%; height: 18%;
+      background: #0b1020; border: 3px solid #4a5568; overflow: hidden;
+    }
+    .city {
+      position: absolute; left: 4px; bottom: 6px; width: 6px; height: 14px; background: #24304a;
+      box-shadow: 10px 4px 0 #1c2740, 18px 0 0 #2a3654, 4px -8px 0 1px #e6c36a, 14px -4px 0 1px #7dba86;
+      animation: city 5s linear infinite;
+    }
+    .pin {
+      position: absolute; left: 5%; top: 20%; width: 44px; height: 36px;
+      background: #efe7c8; color: #5a4a32; font-size: 9px; padding: 6px 5px;
+      transform: rotate(-8deg); box-shadow: 0 2px 0 #c9b98a;
+    }
+
+    .desk {
+      position: absolute; left: -5%; right: -5%; bottom: 0; height: 42%;
+      background: linear-gradient(#4a3428, #2f211b);
+      clip-path: polygon(0 100%, 0 38%, 50% 8%, 100% 38%, 100% 100%);
+      box-shadow: inset 0 18px 30px rgba(0,0,0,.35);
+    }
+    .bezel {
+      position: absolute; left: 11%; right: 11%; top: 17%; height: 49%;
+      background: #16181e; border-radius: 10px 10px 6px 6px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.45), 0 0 40px rgba(90, 160, 220, .08);
+      transform: perspective(700px) rotateX(6deg);
+      overflow: hidden;
+      z-index: 3;
+    }
+    .bezel::after {
+      content: ""; position: absolute; left: 46%; bottom: -10px; width: 8%; height: 10px; background: #16181e;
+    }
+    .chrome {
+      height: 26px; background: #23262e; display: flex; align-items: center; gap: 6px; padding: 0 10px;
+      color: #9aa; font-size: 11px; letter-spacing: .4px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #d36a6a; }
+    .dot:nth-child(2) { background: #e6c36a; }
+    .dot:nth-child(3) { background: #7dba86; }
+    .lcd {
+      position: absolute; inset: 26px 8px 10px; background: #0c1118;
+      overflow: auto; padding: 12px 12px 16px;
+      box-shadow: inset 0 0 40px rgba(80,140,200,.08);
+    }
+    .lcd::-webkit-scrollbar { width: 0; }
+
+    .kb {
+      position: absolute; left: 18%; right: 18%; bottom: 16%; height: 9%;
+      background: #1a1d24; border-radius: 6px; transform: perspective(500px) rotateX(55deg);
+      z-index: 4; box-shadow: 0 8px 0 #0e1014;
+    }
+    .kb i {
+      position: absolute; top: 18%; width: 7%; height: 38%; background: #2b303a; border-radius: 2px;
+    }
+    .mouse {
+      position: absolute; right: 16%; bottom: 18%; width: 22px; height: 34px;
+      background: #1e222a; border-radius: 10px 10px 14px 14px; z-index: 4;
+      transform: perspective(300px) rotateX(40deg);
+    }
+    .mug {
+      position: absolute; right: 7%; bottom: 28%; width: 22px; height: 26px;
+      background: #8b3a3a; border-radius: 0 0 6px 6px; z-index: 4;
+    }
+    .mug .steam, .mug .steam::before, .mug .steam::after {
+      content: ""; position: absolute; width: 3px; height: 12px; border-radius: 50%;
+      background: rgba(255,255,255,.28); animation: steam 2.4s ease-in-out infinite;
+    }
+    .mug .steam { left: 8px; top: -14px; }
+    .mug .steam::before { left: -5px; animation-delay: .3s; }
+    .mug .steam::after { left: 5px; animation-delay: .7s; }
+
+    .arm {
+      position: absolute; bottom: -6%; width: 42%; height: 26%; z-index: 6; pointer-events: none;
+      background: linear-gradient(#4a6a90, #2d4666); border-radius: 40% 40% 0 0;
+    }
+    .arm.l { left: -6%; transform: rotate(16deg); transform-origin: bottom left; }
+    .arm.r { right: -6%; transform: rotate(-16deg); transform-origin: bottom right; }
+    .hand {
+      position: absolute; top: -18px; width: 54px; height: 36px;
+      background: #e2b48a; border-radius: 16px 16px 20px 12px;
+    }
+    .arm.l .hand { right: 10px; animation: typeL .32s ease-in-out infinite; }
+    .arm.r .hand { left: 10px; animation: typeR .32s ease-in-out infinite reverse; }
+    .finger {
+      position: absolute; top: -10px; width: 8px; height: 16px; background: #e2b48a; border-radius: 4px;
+    }
+
+    .vignette {
+      position: absolute; inset: 0; z-index: 7; pointer-events: none;
+      background: radial-gradient(ellipse at 50% 42%, transparent 42%, rgba(0,0,0,.55) 100%);
+    }
+    .grain {
+      position: absolute; inset: 0; z-index: 8; pointer-events: none; opacity: .05;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><filter id='n'><feTurbulence baseFrequency='.9' /></filter><rect width='80' height='80' filter='url(%23n)'/></svg>");
+    }
+    .lids {
+      position: absolute; inset: 0; z-index: 9; pointer-events: none;
+    }
+    .lids::before, .lids::after {
+      content: ""; position: absolute; left: 0; right: 0; height: 50%; background: #050608;
+      animation: blink 8s ease-in-out infinite;
+    }
+    .lids::before { top: 0; transform-origin: top; }
+    .lids::after { bottom: 0; transform-origin: bottom; }
+
+    .hud {
+      position: absolute; left: 10%; right: 10%; top: 10.5%; z-index: 5;
+      font-size: 10px; color: #c8c3b4;
+      text-shadow: 0 1px 2px #000; pointer-events: none;
+    }
+    .hud-row { display: flex; justify-content: space-between; gap: 6px; }
+    .hud-bars { margin-top: 4px; display: flex; gap: 6px; }
+    .hud-bar { flex: 1; height: 4px; background: rgba(0,0,0,.35); border-radius: 3px; overflow: hidden; }
+    .hud-bar i { display: block; height: 100%; }
+    .hud-bar.hp i { background: #7dba86; }
+    .hud-bar.mind i { background: #e6c36a; }
+    .hud-bar.low i { background: #d36a6a; }
+    .badges { margin-top: 3px; color: var(--accent); letter-spacing: 2px; font-size: 11px; }
+    .opt-lock { opacity: .55; }
+    .toast {
+      position: absolute; left: 10%; right: 10%; top: 22%; z-index: 30; pointer-events: none;
+      background: rgba(12, 16, 24, .94); border: 1px solid #2c3544; border-radius: 12px;
+      padding: 10px 12px; font-size: 13px; color: var(--text);
+      animation: toastIn .25s ease, toastOut .4s ease 1.6s forwards;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @keyframes toastOut { to { opacity: 0; transform: translateY(-6px); } }
+    .dock {
+      position: absolute; right: 8px; bottom: 26%; z-index: 20;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .dock button {
+      width: 52px; height: 52px; border-radius: 14px; cursor: pointer;
+      border: 1px solid #3a4454; background: rgba(18, 22, 30, .92);
+      color: var(--text); font-size: 13px;
+    }
+    .dock button.on { border-color: var(--accent); color: var(--accent); }
+    .dock button small { display: block; font-size: 9px; color: var(--muted); }
+    .asset-stage { position: absolute; inset: 12% 6% 28%; z-index: 5; }
+    .car-body {
+      position: absolute; left: 12%; right: 12%; bottom: 22%; height: 38%;
+      background: #2a5a8a; border-radius: 18px 48px 8px 8px;
+      box-shadow: 0 12px 24px rgba(0,0,0,.35);
+    }
+    .car-body::before {
+      content: ""; position: absolute; left: 28%; top: -42%; width: 48%; height: 70%;
+      background: #7aa; border-radius: 10px 28px 0 0; opacity: .7;
+    }
+    .wheel { position: absolute; bottom: 14%; width: 44px; height: 44px; background: #1a1a1a; border-radius: 50%; border: 6px solid #444; }
+    .wheel.l { left: 18%; } .wheel.r { right: 18%; }
+    .sofa { position: absolute; left: 18%; right: 18%; bottom: 8%; height: 28%; background: #5a4a3a; border-radius: 12px 12px 0 0; }
+    .sofa::after { content: ""; position: absolute; left: 8%; right: 8%; top: -18px; height: 22px; background: #6a5644; border-radius: 8px; }
+    .plant { position: absolute; right: 10%; bottom: 18%; width: 16px; height: 50px; background: #3d6b5a; border-radius: 8px 8px 2px 2px; }
+    .empty-lot { position: absolute; left: 16%; right: 16%; bottom: 24%; height: 20%; border: 2px dashed #445; border-radius: 12px; }
+    .fp.commute .desk { height: 16%; opacity: .5; }
+    .sky {
+      position: absolute; left: 0; right: 0; top: 0; height: 42%; z-index: 1;
+      background: linear-gradient(#6aa0c8, #c8d8e8);
+    }
+    .fp.commute.dusk .sky { background: linear-gradient(#2a1a40, #8a4a3a); }
+    .fp.commute.lobby .sky { background: linear-gradient(#2a3140, #1c232e); display: none; }
+    .road {
+      position: absolute; left: -5%; right: -5%; bottom: 14%; height: 22%; z-index: 2;
+      background: #2a2e34;
+    }
+    .road::after {
+      content: ""; position: absolute; left: 0; right: 0; top: 48%; height: 3px;
+      background: repeating-linear-gradient(90deg, #e6c36a 0 18px, transparent 18px 36px);
+      animation: lanes 1.2s linear infinite;
+    }
+    .metro-door {
+      position: absolute; left: 18%; right: 18%; top: 22%; height: 40%; z-index: 3;
+      background: #1a2230; border: 4px solid #4a5568; border-radius: 8px;
+    }
+    .metro-door::before, .metro-door::after {
+      content: ""; position: absolute; top: 0; bottom: 0; width: 48%; background: #243044;
+      animation: doors 2.8s ease-in-out infinite;
+    }
+    .metro-door::before { left: 0; }
+    .metro-door::after { right: 0; }
+    .ebike {
+      position: absolute; left: 38%; bottom: 22%; width: 90px; height: 44px; z-index: 4;
+      background: #3d6b5a; border-radius: 18px 30px 8px 8px;
+    }
+    .ebike::after { content: ""; position: absolute; left: 8px; bottom: -10px; width: 22px; height: 22px; background: #111; border-radius: 50%; box-shadow: 52px 0 0 #111; }
+    .gate {
+      position: absolute; left: 22%; right: 22%; bottom: 22%; height: 36%; z-index: 3;
+      background: #2c3544; border-radius: 6px 6px 0 0;
+      box-shadow: inset 0 0 0 8px #1a2028;
+    }
+    .lift {
+      position: absolute; left: 36%; top: 16%; width: 28%; height: 46%; z-index: 3;
+      background: #c8c4b8; border: 4px solid #6a7068;
+    }
+    @keyframes lanes { to { background-position: 36px 0; } }
+    @keyframes doors { 0%,40% { transform: none; } 55%,90% { transform: translateX(var(--d, 0)); } }
+    .metro-door::before { --d: -70%; }
+    .metro-door::after { --d: 70%; }
+
+    .behind {
+      position: absolute; left: 50%; top: 8%; width: 70px; height: 90px; margin-left: -35px;
+      background: #0a0c10; border-radius: 20px 20px 8px 8px; opacity: 0; z-index: 2;
+    }
+    .phone-fp {
+      position: absolute; right: 8%; bottom: 6%; width: 46%; height: 40%; z-index: 16;
+      background: #0d0d0f; border-radius: 18px; border: 3px solid #2c2c32; opacity: 0;
+      padding: 10px 8px 28px; color: #eee; font-size: 12px;
+      transform: rotate(-8deg) translateY(70%);
+      box-shadow: 0 16px 40px rgba(0,0,0,.55);
+      pointer-events: none; cursor: pointer;
+      transition: transform .45s ease, opacity .35s ease;
+    }
+    .phone-feed {
+      height: 100%; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(#223 0%, #412 40%, #1a1a22 100%);
+      position: relative;
+    }
+    .phone-feed::after {
+      content: ""; position: absolute; left: 12%; right: 12%; top: 18%; height: 48%;
+      background: rgba(255,255,255,.08); border-radius: 8px;
+      animation: feed 1.6s ease-in-out infinite;
+    }
+    .phone-hint {
+      position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
+      font-size: 11px; color: var(--accent);
+    }
+    .phone-veil {
+      display: none; position: absolute; inset: 0; z-index: 14; cursor: pointer;
+    }
+    .fp.phone-up .phone-veil { display: block; }
+    .fp.phone-up .phone-fp { opacity: 1; transform: rotate(-8deg) translateY(0); pointer-events: auto; }
+    .fp.phone-up .lcd { filter: blur(3px) brightness(.48); pointer-events: none; }
+    .fp.phone-up .arm.l { transform: rotate(8deg) translate(18px, -36px); }
+    .fp.slack .arm.l { transform: rotate(6deg); }
+    .fp.panic { animation: panicCam .35s linear infinite; }
+    .fp.panic .behind { opacity: .8; animation: loom 1.5s ease-in-out infinite; }
+    .fp.panic .lamp { background: #d36a6a; }
+    .fp.panic .lcd { box-shadow: inset 0 0 40px rgba(211,106,106,.25); }
+    .fp.tired .arm.l .hand, .fp.tired .arm.r .hand { animation-duration: .9s; }
+    .fp.money .lcd { box-shadow: inset 0 0 30px rgba(230,195,106,.2); }
+
+    .letterbox { position: absolute; left: 0; right: 0; height: 6%; background: #050608; z-index: 12; pointer-events: none; }
+    .letterbox.top { top: 0; }
+    .letterbox.bot { display: none; }
+    .fp.talk .lids, .fp.talk .bezel, .fp.talk .kb, .fp.talk .mouse, .fp.talk .mug, .fp.talk .pin, .fp.talk .phone-fp { display: none; }
+    .fp.talk .desk { height: 22%; clip-path: polygon(0 100%, 0 55%, 50% 35%, 100% 55%, 100% 100%); opacity: .9; }
+    .fp.talk .arm { height: 14%; opacity: .75; }
+    .fp.talk .hud { top: 7%; z-index: 13; }
+    .talk-stage { position: absolute; inset: 10% 0 52%; z-index: 4; }
+    .person {
+      position: absolute; left: 50%; bottom: 0; width: 130px; height: 180px; margin-left: -65px;
+      transform-origin: 50% 100%; animation: talkBob 2.4s ease-in-out infinite;
+    }
+    .fp.lean .person { left: 58%; margin-left: 0; }
+    .fp.call .person { width: 120px; height: 160px; bottom: auto; top: 8%; margin-left: -60px; }
+    .fp.phone .person { width: 100px; height: 130px; top: 12%; bottom: auto; }
+    .p-hair { position: absolute; left: 38px; top: 8px; width: 84px; height: 44px; background: #2a241c; border-radius: 40px 40px 8px 8px; z-index: 2; }
+    .p-head { position: absolute; left: 48px; top: 28px; width: 64px; height: 72px; background: #e4c2a0; border-radius: 50% 50% 46% 46%; z-index: 1; }
+    .p-eye { position: absolute; top: 32px; width: 8px; height: 8px; background: #2a241c; border-radius: 50%; }
+    .p-eye.l { left: 16px; } .p-eye.r { right: 16px; }
+    .p-brow { position: absolute; top: 24px; width: 16px; height: 3px; background: #2a241c; }
+    .p-brow.l { left: 12px; transform: rotate(-8deg); } .p-brow.r { right: 12px; transform: rotate(8deg); }
+    .p-glasses { display: none; position: absolute; left: 8px; top: 30px; width: 48px; height: 16px; border: 2px solid #333; border-radius: 6px; }
+    .p-mouth { position: absolute; left: 24px; bottom: 14px; width: 16px; height: 7px; background: #a45; border-radius: 0 0 10px 10px; animation: speak .28s ease-in-out infinite; }
+    .p-neck { position: absolute; left: 70px; top: 92px; width: 20px; height: 18px; background: #d4b08c; }
+    .p-body { position: absolute; left: 28px; top: 106px; width: 104px; height: 120px; background: #3d5a80; border-radius: 18px 18px 0 0; }
+    .person.boss .p-hair { background: #8a8a8a; height: 28px; top: 18px; }
+    .person.boss .p-glasses { display: block; }
+    .person.boss .p-body { background: #2c3a4a; }
+    .person.boss .p-brow.l { transform: rotate(12deg); } .person.boss .p-brow.r { transform: rotate(-12deg); }
+    .person.pm .p-hair { background: #4a3020; }
+    .person.pm .p-body { background: #6b4c7a; }
+    .person.pm .p-body::after { content: ""; position: absolute; left: 46px; top: 8px; width: 12px; height: 36px; background: #e6c36a; border-radius: 2px; }
+    .person.colleague .p-hair { background: #1a1a1a; border-radius: 20px 40px 4px 8px; }
+    .person.colleague .p-body { background: #3d6b5a; }
+    .person.client .p-hair { background: #3a2a20; }
+    .person.client .p-body { background: #1f2a3a; }
+    .person.mom .p-hair { background: #5a3a28; height: 52px; }
+    .person.mom .p-body { background: #8a5a6a; }
+    .person.recruiter .p-hair { background: #2c2018; }
+    .person.recruiter .p-body { background: #3a5c7a; }
+    .person.recruiter .p-mouth { background: #c66; height: 8px; }
+    .person.wife .p-hair { background: #1a1210; height: 58px; left: 32px; width: 96px; border-radius: 40px 40px 12px 18px; }
+    .person.wife .p-body { background: #8a4a5a; }
+    .video-frame {
+      display: none; position: absolute; left: 50%; top: 6%; width: 200px; height: 210px; margin-left: -100px;
+      background: #111; border: 4px solid #2a3140; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,.4);
+    }
+    .fp.call .video-frame { display: block; }
+    .fp.call .video-frame .person { position: relative; left: 40px; margin: 0; top: 20px; }
+    .call-tag { position: absolute; left: 8px; bottom: 8px; font-size: 10px; color: #9ab; z-index: 2; }
+    .bubble {
+      background: rgba(12, 16, 24, .92); border: 1px solid #2c3544; border-radius: 12px;
+      padding: 10px 12px; animation: rise .35s ease; flex: 0 0 auto;
+    }
+    .who { font-size: 11px; color: var(--accent); margin-bottom: 4px; letter-spacing: 1px; }
+    .spoken { font-size: 16px; line-height: 1.45; min-height: 24px; }
+    .scene-cap { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .talk-ui {
+      position: absolute; left: 6%; right: 6%; bottom: 4%; z-index: 14;
+      display: flex; flex-direction: column; gap: 8px; max-height: 48%;
+    }
+    .talk-choices {
+      flex: 0 1 auto; overflow: auto;
+      opacity: 0; transition: opacity .3s;
+    }
+    .talk-choices.show { opacity: 1; }
+    .talk-choices button {
+      width: 100%; text-align: left; border: 0; border-radius: 10px; padding: 9px 12px;
+      background: rgba(30, 38, 51, .96); color: var(--text); margin: 0 0 6px; cursor: pointer; font-size: 13px;
+    }
+
+    .title { font-size: 22px; margin: 6px 0 8px; }
+    .muted { color: var(--muted); }
+    .sub { color: var(--muted); margin: 0 0 16px; font-size: 13px; }
+    .brand { margin-top: 18px; color: #667; font-size: 11px; }
+    .home-hero { text-align: center; padding: 18px 6px 8px; }
+    .home-hero h1 { font-size: 26px; letter-spacing: 2px; margin: 10px 0 8px; }
+    .btn {
+      width: 100%; border: 0; border-radius: 10px; padding: 12px 14px; font-size: 15px;
+      background: var(--accent); color: #1a1a1a; cursor: pointer; margin-top: 8px;
+    }
+    .btn.ghost { background: transparent; color: var(--text); border: 1px solid #333; }
+    .links { display: flex; justify-content: space-between; margin-top: 14px; color: var(--muted); font-size: 12px; }
+    .links span { cursor: pointer; }
+    .msg {
+      background: #1a2230; border-radius: 10px 10px 10px 2px; padding: 10px 12px; margin: 8px 0 14px;
+      animation: rise .35s ease;
+    }
+    .tag { font-size: 10px; color: #8ab4ff; letter-spacing: 1px; }
+    .choices button {
+      width: 100%; text-align: left; border: 0; border-radius: 10px; padding: 10px 12px;
+      background: #1e2633; color: var(--text); margin: 0 0 8px; cursor: pointer;
+      animation: rise .4s ease both; font-size: 13px;
+    }
+    .choices button:nth-child(1) { animation-delay: .05s; }
+    .choices button:nth-child(2) { animation-delay: .12s; }
+    .choices button:nth-child(3) { animation-delay: .19s; }
+    .choices button:nth-child(4) { animation-delay: .26s; }
+    .folder { background: #1a2230; border-radius: 10px; padding: 12px; margin: 0 0 8px; cursor: pointer; animation: rise .3s ease; }
+    .delta { font-size: 14px; line-height: 1.7; }
+    .delta .neg { color: var(--danger); }
+    .delta .pos { color: var(--ok); }
+    .apps { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .apps button { min-height: 52px; background: #1e2633; color: var(--text); border: 0; border-radius: 10px; animation: pulse .9s ease infinite; }
+    .warn { color: var(--danger); font-size: 14px; margin-bottom: 8px; animation: shake .45s linear infinite; }
+    .boss-raid .behind { opacity: .85; animation: loom .6s ease-out both, patrolWalk 1.1s ease-in-out infinite; }
+    .boss-meter {
+      color: var(--danger); font-size: 18px; letter-spacing: 1px; margin: 6px 0 10px; text-align: center;
+      animation: shake .4s linear infinite;
+    }
+    .boss-meter b { font-size: 28px; color: #f3d27a; }
+    .app-tile small { display: block; color: var(--muted); font-size: 11px; margin-top: 4px; }
+    .patrol {
+      position: absolute; inset: 0; z-index: 30; background: rgba(6,8,12,.72);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 18px 14px 28px;
+    }
+    .patrol.gone { display: none; }
+    .patrol .steps {
+      position: absolute; left: 8%; right: 8%; top: 18%; height: 12px; background: #1a2230; border-radius: 8px; overflow: hidden;
+    }
+    .patrol .steps i { display: block; height: 100%; width: 20%; background: #c44; transition: width .3s; }
+    .patrol .foot {
+      position: absolute; left: 10%; top: 12%; color: var(--danger); font-size: 13px; letter-spacing: 2px;
+      animation: shake .35s linear infinite;
+    }
+    .patrol .loom-man {
+      position: absolute; left: 50%; top: 22%; width: 90px; height: 120px; margin-left: -45px;
+      background: #0a0c10; border-radius: 24px 24px 10px 10px; opacity: .9;
+      animation: loom .5s ease-out both;
+    }
+    @keyframes patrolWalk { 0%,100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.06) translateY(-4px); } }
+    .share { white-space: pre-wrap; text-align: center; line-height: 1.65; font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    td { padding: 7px 0; border-bottom: 1px solid #243; }
+    .tabs { display: flex; gap: 6px; margin: 8px 0 10px; }
+    .tabs button { flex: 1; background: #1e2633; color: var(--text); border: 0; border-radius: 8px; padding: 8px; }
+    .tabs button.on { background: var(--accent); color: #1a1a1a; }
+
+    @keyframes breathe {
+      0%,100% { transform: translateY(0) rotateX(0); }
+      50% { transform: translateY(3px) rotateX(.6deg); }
+    }
+    @keyframes flicker { 0%,100% { opacity: .5; } 93% { opacity: .58; } 95% { opacity: .18; } }
+    @keyframes city { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.35); } }
+    @keyframes steam { 0% { opacity: 0; transform: translateY(6px); } 40% { opacity: .5; } 100% { opacity: 0; transform: translateY(-12px); } }
+    @keyframes typeL { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(3px) rotate(-6deg); } }
+    @keyframes typeR { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px) rotate(5deg); } }
+    @keyframes blink {
+      0%, 90%, 100% { transform: scaleY(0); }
+      93% { transform: scaleY(1); }
+    }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @keyframes lift { to { transform: rotate(-8deg) translateY(0); } }
+    @keyframes loom { 0% { transform: scale(.7); opacity: 0; } 70% { transform: scale(1); opacity: .85; } 100% { opacity: .6; } }
+    @keyframes panicCam { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-2px, 1px); } }
+    @keyframes shake { 0%,100% { transform: none; } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+    @keyframes pulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.2); } }
+    @keyframes talkBob { 0%,100% { transform: translateY(0) scale(0.86); } 50% { transform: translateY(4px) scale(0.86); } }
+    @keyframes feed { 0%,100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(8px); opacity: .6; } }
+    .fp.fight { animation: fightPulse 1.2s ease-in-out infinite; }
+    .fp.fight.hit { animation: fightShake .18s linear; }
+    .fp.fight .lamp { box-shadow: 0 0 80px 24px rgba(180, 40, 30, .28); }
+    .fp.fight .desk { height: 18%; }
+    .fp.fight .talk-stage { display: none; }
+    .fight-flash {
+      position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 11; pointer-events: none;
+    }
+    .fight-flash.on { opacity: .28; }
+    .arena {
+      position: absolute; left: 0; right: 0; top: 10%; height: 52%; z-index: 5; cursor: pointer;
+    }
+    .hp-row {
+      position: absolute; left: 8%; right: 8%; top: 0; display: flex; align-items: center; gap: 8px; z-index: 6;
+    }
+    .hp { flex: 1; height: 10px; background: #2a1a1a; border-radius: 6px; overflow: hidden; border: 1px solid #5a3030; }
+    .hp i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #c44, #e6c36a); transition: width .12s; }
+    .hp.foe i { background: linear-gradient(90deg, #e6c36a, #c44); float: right; }
+    .vs { color: #e6c36a; font-size: 12px; letter-spacing: 2px; }
+    .fighter {
+      position: absolute; bottom: 8%; width: 140px; height: 200px;
+    }
+    .fighter.you { left: 8%; }
+    .fighter.foe { right: 8%; }
+    .fighter .person { animation: none; left: 10px; margin: 0; bottom: 18px; }
+    .fighter.foe .person { transform: scaleX(-1); }
+    .fighter.punch-l { animation: hitL .16s ease; }
+    .fighter.punch-r { animation: hitR .16s ease; }
+    .fighter.shake { animation: boom .22s ease; }
+    .fist {
+      position: absolute; width: 30px; height: 30px; background: #e4c2a0; border-radius: 50%;
+      bottom: 86px; z-index: 7; box-shadow: 0 0 0 3px rgba(228,194,160,.25);
+    }
+    .fighter.you .fist { right: 6px; }
+    .fighter.foe .fist { left: 6px; }
+    .fighter.you.punch-l .fist { animation: jabR .16s ease; }
+    .fighter.foe.punch-r .fist { animation: jabL .16s ease; }
+    .fname {
+      position: absolute; bottom: 0; left: 0; right: 0; text-align: center;
+      font-size: 11px; color: #c9d3df; text-shadow: 0 1px 4px #000;
+    }
+    .cup {
+      position: absolute; left: 46%; bottom: 22%; width: 18px; height: 24px; background: #d8d0c4;
+      border-radius: 0 0 6px 6px; opacity: .7; animation: cupFly 1.6s ease-in infinite;
+    }
+    .fx {
+      position: absolute; left: 50%; top: 34%; margin-left: -28px;
+      font-size: 32px; color: #e6c36a; opacity: 0; pointer-events: none; font-weight: 700;
+      text-shadow: 0 0 12px #c44;
+    }
+    .fx.show { animation: bang .32s ease; }
+    .fight-ui {
+      position: absolute; left: 8%; right: 8%; bottom: 6%; z-index: 14; text-align: center;
+    }
+    .timer-bar { height: 6px; background: #2a3140; border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+    .timer-bar i { display: block; height: 100%; width: 100%; background: var(--danger); animation: drain 5s linear forwards; }
+    .punch-btn {
+      width: 100%; border: 0; border-radius: 14px; padding: 16px;
+      background: var(--danger); color: #fff; font-size: 20px; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(196, 68, 68, .35);
+    }
+    .punch-btn:active { transform: scale(.98); }
+    .fight-meta { color: var(--accent); margin-bottom: 8px; font-size: 14px; }
+    @keyframes hitL { 0% { transform: none; } 50% { transform: translate(36px, -14px) rotate(10deg); } 100% { transform: none; } }
+    @keyframes hitR { 0% { transform: none; } 50% { transform: translate(-36px, -12px) rotate(-10deg); } 100% { transform: none; } }
+    @keyframes jabR { 0% { transform: none; } 50% { transform: translate(42px, -8px) scale(1.15); } 100% { transform: none; } }
+    @keyframes jabL { 0% { transform: none; } 50% { transform: translate(-42px, -8px) scale(1.15); } 100% { transform: none; } }
+    @keyframes boom { 0%,100% { transform: none; } 40% { transform: translate(10px, -6px) rotate(4deg); } 70% { transform: translate(-10px, 4px); } }
+    @keyframes bang { 0% { opacity: 1; transform: scale(.5); } 100% { opacity: 0; transform: scale(1.8) translateY(-24px); } }
+    @keyframes drain { to { width: 0; } }
+    @keyframes cupFly { 0% { transform: translate(0,0) rotate(0); } 100% { transform: translate(40px,-80px) rotate(220deg); opacity: 0; } }
+    @keyframes fightShake { 0%,100% { transform: none; } 25% { transform: translate(-5px, 2px); } 75% { transform: translate(5px, -2px); } }
+    @keyframes fightPulse { 0%,100% { filter: none; } 50% { filter: brightness(1.06); } }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    const LABELS = { money: "存款", hp: "体力", mind: "心态", ability: "能力", boss: "老板好感", slack: "摸鱼", salary: "工资", day: "天数" };
+    const SPEAKER = {
+      E01: { role: "boss", name: "老板", shot: "overdesk" },
+      E02: { role: "pm", name: "产品经理", shot: "overdesk" },
+      E03: { role: "boss", name: "老板", shot: "overdesk" },
+      E04: { role: "colleague", name: "同事", shot: "lean" },
+      E05: { role: "colleague", name: "同事", shot: "lean" },
+      E06: { role: "colleague", name: "同事", shot: "lean" },
+      E07: { role: "colleague", name: "同事", shot: "overdesk" },
+      E09: { role: "client", name: "对接人", shot: "call" },
+      E10: { role: "pm", name: "项目经理", shot: "overdesk" },
+      E11: { role: "pm", name: "对方", shot: "overdesk" },
+      E12: { role: "client", name: "对方", shot: "call" },
+      E14: { role: "colleague", name: "同事", shot: "lean" },
+      E15: { role: "boss", name: "老板", shot: "overdesk" },
+      E17: { role: "mom", name: "家里", shot: "phone" },
+      E19: { role: "colleague", name: "同事", shot: "lean" },
+      E20: { role: "recruiter", name: "猎头", shot: "call" },
+      E21: { role: "boss", name: "老板", shot: "overdesk" },
+      E23: { role: "colleague", name: "同事", shot: "lean" },
+      E25: { role: "boss", name: "老板", shot: "overdesk" },
+      E43: { role: "client", name: "销售", shot: "overdesk" },
+      E44: { role: "pm", name: "中介", shot: "overdesk" },
+      E45: { role: "recruiter", name: "相亲对象", shot: "overdesk" },
+      E46: { role: "boss", name: "老板", shot: "overdesk" },
+      E48: { role: "boss", name: "老板", shot: "overdesk" },
+      E49: { role: "recruiter", name: "HR", shot: "overdesk" },
+      E50: { role: "recruiter", name: "对方律师", shot: "overdesk" },
+      E51: { role: "recruiter", name: "招聘", shot: "call" },
+      E52: { role: "client", name: "律师", shot: "overdesk" },
+      E71: { role: "colleague", name: "同事", shot: "overdesk" },
+      E72: { role: "colleague", name: "AI", shot: "overdesk" },
+      E73: { role: "colleague", name: "同事", shot: "lean" },
+      E74: { role: "pm", name: "评审", shot: "overdesk" },
+      E75: { role: "pm", name: "对方", shot: "overdesk" },
+      E76: { role: "boss", name: "老板", shot: "overdesk" },
+      E77: { role: "colleague", name: "同事", shot: "lean" },
+      E78: { role: "colleague", name: "同事", shot: "lean" },
+      E79: { role: "colleague", name: "同事", shot: "overdesk" },
+      E80: { role: "pm", name: "待办", shot: "overdesk" },
+      E86: { role: "colleague", name: "同事", shot: "overdesk" },
+      E87: { role: "boss", name: "老板", shot: "overdesk" },
+      E88: { role: "pm", name: "弹窗", shot: "overdesk" },
+      E89: { role: "colleague", name: "实习生", shot: "lean" },
+      E90: { role: "colleague", name: "同事", shot: "overdesk" },
+      E91: { role: "pm", name: "系统", shot: "overdesk" },
+      E92: { role: "client", name: "客人", shot: "overdesk" },
+      E93: { role: "pm", name: "评审", shot: "overdesk" },
+      E94: { role: "colleague", name: "同事", shot: "lean" },
+      E95: { role: "boss", name: "老板", shot: "overdesk" },
+      E96: { role: "colleague", name: "同事", shot: "lean" },
+      E97: { role: "colleague", name: "同事", shot: "lean" },
+      E98: { role: "colleague", name: "同事", shot: "overdesk" }
+    };
+    const E02_BY_CAREER = {
+      programmer: { role: "pm", name: "产品经理" },
+      sales: { role: "client", name: "客户", shot: "call" },
+      admin: { role: "boss", name: "老板" },
+      finance: { role: "boss", name: "老板" }
+    };
+    const E11_BY_CAREER = {
+      programmer: { role: "pm", name: "产品经理" },
+      sales: { role: "client", name: "客户", shot: "call" },
+      admin: { role: "boss", name: "领导" },
+      finance: { role: "client", name: "业务" }
+    };
+
+    function speakerOf(e) {
+      if (!e) return null;
+      const base = SPEAKER[e.id];
+      if (!base) return null;
+      const career = state.game && state.game.careerId;
+      let extra = {};
+      if (e.id === "E02") extra = E02_BY_CAREER[career] || {};
+      if (e.id === "E11") extra = E11_BY_CAREER[career] || {};
+      const s = {};
+      s.role = extra.role || base.role;
+      s.name = extra.name || base.name;
+      s.shot = extra.shot || base.shot;
+      s.line = e.title;
+      s.cap = e.description;
+      return s;
+    }
+    const state = {
+      userId: localStorage.getItem("dg_uid") || ("u" + Math.random().toString(16).slice(2, 10)),
+      api: localStorage.getItem("dg_api") || "",
+      game: null,
+      scene: "home",
+      tab: "survive"
+    };
+    localStorage.setItem("dg_uid", state.userId);
+
+    function apiUrl(path) { return (state.api || "") + path; }
+    async function req(path, method, body) {
+      const res = await fetch(apiUrl(path), {
+        method: method || "GET",
+        headers: { "Content-Type": "application/json", "X-User-Id": state.userId },
+        body: body ? JSON.stringify(body) : undefined
+      });
+      const json = await res.json();
+      if (json.code !== 0) throw new Error(json.message || "请求失败");
+      return json.data;
+    }
+    function go(scene) {
+      stopClocks();
+      if (scene === "play") state.phoneDown = false;
+      if (scene === "fight") {
+        state.fightHits = 0;
+        state.fightLock = false;
+        state.fightTimerStarted = false;
+        state.hpYou = 100;
+        state.hpFoe = 100;
+      }
+      state.scene = scene;
+      render();
+    }
+    function fmt(n) { return Number(n).toLocaleString("zh-CN"); }
+    function sign(v) { const n = Number(v); if (!n) return ""; return n > 0 ? "+" + n : String(n); }
+
+    function moodOf() {
+      const g = state.game, e = g && g.event, a = g && g.attrs;
+      if (state.scene === "boss" || (e && e.minigame) || (e && e.type === "BOSS")) return "panic";
+      if (e && e.type === "SLACK") return "slack";
+      if (e && e.ui === "commute") return "life";
+      if (e && e.type === "MONEY") return "money";
+      if (a && (a.hp < 40 || a.mind < 35)) return "tired";
+      if (a && a.slack > 70) return "slack";
+      return "work";
+    }
+    function phoneUp() {
+      const e = state.game && state.game.event;
+      return state.scene === "play" && e && e.type === "SLACK" && !state.phoneDown;
+    }
+    function dropPhone() {
+      state.phoneDown = true;
+      const fp = document.querySelector(".fp");
+      if (fp) fp.classList.remove("phone-up");
+    }
+    function appName() {
+      return (state.game && state.game.workApp) || "IDEA";
+    }
+    function keys() {
+      let html = "";
+      for (let i = 0; i < 12; i++) html += "<i style='left:" + (6 + i * 7.5) + "%'></i>";
+      return html;
+    }
+    function deltas(applied) {
+      if (!applied) return "";
+      return Object.keys(applied).filter(k => k !== "day" && applied[k]).map(k => {
+        const n = applied[k];
+        return "<div class='" + (n < 0 ? "neg" : "pos") + "'>" + (LABELS[k] || k) + " " + sign(n) + "</div>";
+      }).join("");
+    }
+    function bodyWord() {
+      const a = state.game && state.game.attrs;
+      if (!a) return "";
+      if (a.hp < 30) return "腰不行了";
+      if (a.hp < 55) return "有点虚";
+      return "还撑得住";
+    }
+    function mindWord() {
+      const a = state.game && state.game.attrs;
+      if (!a) return "";
+      if (a.mind < 30) return "想离职";
+      if (a.mind < 55) return "有点崩";
+      return "还没裂";
+    }
+    function lifeBadges() {
+      const f = (state.game && state.game.flags) || {};
+      const bits = [];
+      if (f.jobless) bits.push("待业");
+      if (f.house) bits.push("有房");
+      if (f.car) bits.push("有车");
+      if (f.married) bits.push("已婚");
+      if (f.stocks) bits.push("持股" + f.stocks);
+      return bits.length ? "<div class='badges'>" + bits.join(" · ") + "</div>" : "";
+    }
+    function hud() {
+      const g = state.game;
+      if (!g) return "";
+      const a = g.attrs;
+      const hpLow = a.hp < 35 ? " low" : "";
+      const mindLow = a.mind < 35 ? " low" : "";
+      return "<div class='hud'><div class='hud-row'><span>第 " + g.day + " 天</span><span>💰 " + fmt(a.money) + "</span><span>👔" + a.boss + "</span></div>" +
+        "<div class='hud-bars'><div class='hud-bar hp" + hpLow + "'><i style='width:" + a.hp + "%'></i></div>" +
+        "<div class='hud-bar mind" + mindLow + "'><i style='width:" + a.mind + "%'></i></div></div>" +
+        "<div class='hud-row'><span>身体 " + a.hp + " · " + bodyWord() + "</span><span>心态 " + a.mind + " · " + mindWord() + "</span></div>" +
+        lifeBadges() + "</div>";
+    }
+    function flags() { return (state.game && state.game.flags) || {}; }
+    function owned(kind) {
+      const f = flags();
+      if (kind === "car") return !!f.car;
+      if (kind === "house") return !!f.house;
+      return !!f.married;
+    }
+    function sellQuote(kind) {
+      const f = flags();
+      if (kind === "car") return Math.round((f.carPaid || 68000) * 0.62);
+      if (kind === "house") return Math.round((f.housePaid || 128000) * 0.78);
+      return Math.round((f.marriedPaid || 48000) * 0.4);
+    }
+    function dock() {
+      if (!state.game) return "";
+      if (["home", "career", "ending", "rank", "book", "settings", "fight", "asset"].indexOf(state.scene) >= 0) return "";
+      return "<div class='dock'>" +
+        "<button class='" + (owned("car") ? "on" : "") + "' onclick='openAsset(\"car\")'>车<small>" + (owned("car") ? "已买" : "看看") + "</small></button>" +
+        "<button class='" + (owned("house") ? "on" : "") + "' onclick='openAsset(\"house\")'>房<small>" + (owned("house") ? "已买" : "看看") + "</small></button>" +
+        "<button class='" + (owned("wife") ? "on" : "") + "' onclick='openAsset(\"wife\")'>她<small>" + (owned("wife") ? "已婚" : "看看") + "</small></button>" +
+        "</div>";
+    }
+    function openAsset(kind) {
+      if (state.game) state.game.flavor = null;
+      if (state.scene !== "asset") state.backScene = state.scene;
+      state.assetKind = kind;
+      go("asset");
+    }
+    async function sellAsset(kind) {
+      const item = kind === "wife" ? "married" : kind;
+      state.game = await req("/api/game/" + state.game.gameId + "/asset", "POST", { item: item });
+      go("asset");
+    }
+    function asset() {
+      const kind = state.assetKind || "car";
+      const has = owned(kind);
+      const quote = sellQuote(kind);
+      let stage = "";
+      let title = "";
+      let cap = "";
+      if (kind === "car") {
+        title = has ? "你的车还停在地库" : "车位还空着";
+        cap = has ? "钥匙在口袋里。卖掉大约能拿回 " + fmt(quote) + "。" : "销售说过首付 6.8 万。现在还不是你的。";
+        stage = has
+          ? "<div class='car-body'></div><div class='wheel l'></div><div class='wheel r'></div>"
+          : "<div class='empty-lot'></div>";
+      } else if (kind === "house") {
+        title = has ? "门卡能刷开" : "样板间的灯还亮着，不是你家";
+        cap = has ? "窗户对着高架。卖掉大约 " + fmt(quote) + "。" : "首付 12.8 万。中介还在等你签字。";
+        stage = has
+          ? "<div class='sofa'></div><div class='plant'></div>"
+          : "<div class='empty-lot'></div>";
+      } else {
+        title = has ? "她坐在对面刷手机" : "座位还空着";
+        cap = has ? "日子是过上了。分开能拿回大约 " + fmt(quote) + "。" : "酒宴按 4.8 万。你还没把婚结了。";
+        stage = has ? personHtml({ role: "wife" }) : "<div class='empty-lot'></div>";
+      }
+      const sellLabel = kind === "wife" ? "分手，把钱拿回一点" : (kind === "house" ? "卖房" : "卖车");
+      return "<div class='fp talk asset'>" +
+        "<div class='letterbox top'></div><div class='grain'></div><div class='vignette'></div>" +
+        "<div class='fp-cam' id='cam'><div class='fp-breathe'>" +
+          "<div class='ceiling'></div><div class='lamp'></div>" +
+          "<div class='wall-l'></div><div class='wall-r'></div>" +
+          "<div class='window'><div class='city'></div></div><div class='desk'></div>" +
+          "<div class='asset-stage'>" + stage + "</div>" +
+        "</div></div>" + hud() +
+        "<div class='talk-ui'><div class='bubble'><div class='who'>" + title + "</div>" +
+        "<div class='scene-cap'>" + cap + "</div>" +
+        (state.game && state.game.flavor ? "<div class='muted' style='margin-top:8px'>" + state.game.flavor + "</div>" : "") +
+        "</div><div class='talk-choices show'>" +
+        (has ? "<button onclick='sellAsset(\"" + kind + "\")'>" + sellLabel + "</button>" : "") +
+        "<button onclick='go(state.backScene || \"play\")'>回去</button>" +
+        "</div></div></div>";
+    }
+    function commuteOptions(e) {
+      const hasCar = owned("car");
+      let options = (e.options || []).slice();
+      if (!hasCar) {
+        options = options.filter(function (o) { return o.requireFlag !== "car"; });
+        if (e.id === "E60") {
+          options.unshift({ id: "A", text: "打车回家，35。", minMoney: 35 });
+        }
+        if (e.id === "E61") {
+          const taxi = [];
+          const rest = [];
+          options.forEach(function (o) {
+            if (o.id === "D") taxi.push(o);
+            else rest.push(o);
+          });
+          options = taxi.concat(rest);
+        }
+      }
+      return choiceButtons(options);
+    }
+    function choiceButtons(options) {
+      const money = state.game && state.game.attrs ? state.game.attrs.money : 0;
+      const f = flags();
+      return "<div class='choices'>" + (options || []).filter(function (o) {
+        return !(o.requireFlag && !f[o.requireFlag]);
+      }).map(function (o) {
+        const noMoney = o.minMoney && money < o.minMoney;
+        const extra = noMoney ? " · 钱不够" : "";
+        return "<button class='" + (noMoney ? "opt-lock" : "") + "' onclick='choose(\"" + o.id + "\")'>[ " + o.id + " ]  " + o.text + extra + "</button>";
+      }).join("") + "</div>";
+    }
+
+    function shell(lcd) {
+      const up = phoneUp();
+      return "<div class='fp " + moodOf() + (up ? " phone-up" : "") + "'>" +
+        "<div class='grain'></div><div class='vignette'></div><div class='lids'></div>" +
+        "<div class='phone-veil' onclick='dropPhone()'></div>" +
+        "<div class='fp-cam' id='cam'><div class='fp-breathe'>" +
+          "<div class='ceiling'></div><div class='lamp'></div>" +
+          "<div class='wall-l'></div><div class='wall-r'></div>" +
+          "<div class='window'><div class='city'></div></div>" +
+          "<div class='pin'>别忘了<br/>写周报</div>" +
+          "<div class='behind'></div>" +
+          "<div class='bezel'><div class='chrome'><span class='dot'></span><span class='dot'></span><span class='dot'></span><span style='margin-left:6px'>" + appName() + "</span></div>" +
+          "<div class='lcd'>" + lcd + "</div></div>" +
+          "<div class='desk'></div>" +
+          "<div class='kb'>" + keys() + "</div>" +
+          "<div class='mouse'></div>" +
+          "<div class='mug'><div class='steam'></div></div>" +
+          "<div class='arm l'><div class='hand'><span class='finger' style='left:8px'></span><span class='finger' style='left:20px'></span><span class='finger' style='left:32px'></span></div></div>" +
+          "<div class='arm r'><div class='hand'><span class='finger' style='left:8px'></span><span class='finger' style='left:20px'></span><span class='finger' style='left:32px'></span></div></div>" +
+          "<div class='phone-fp' onclick='dropPhone()'><div class='phone-feed'></div><div class='phone-hint'>短视频 02:18<br/>点屏幕，放下手机</div></div>" +
+        "</div></div>" + hud() +
+      "</div>";
+    }
+
+    function personHtml(sp) {
+      return "<div class='person " + sp.role + "'>" +
+        "<div class='p-hair'></div><div class='p-head'>" +
+        "<div class='p-brow l'></div><div class='p-brow r'></div>" +
+        "<div class='p-glasses'></div><div class='p-eye l'></div><div class='p-eye r'></div>" +
+        "<div class='p-mouth'></div></div><div class='p-neck'></div><div class='p-body'></div></div>";
+    }
+
+    function talkShell(sp, choicesHtml, extra) {
+      const shot = sp.shot === "call" ? "call" : (sp.shot === "lean" ? "lean" : (sp.shot === "phone" ? "phone" : "overdesk"));
+      state.talkLine = sp.line || "";
+      return "<div class='fp talk " + shot + "'>" +
+        "<div class='letterbox top'></div><div class='letterbox bot'></div>" +
+        "<div class='grain'></div><div class='vignette'></div>" +
+        "<div class='fp-cam' id='cam'><div class='fp-breathe'>" +
+          "<div class='ceiling'></div><div class='lamp'></div>" +
+          "<div class='wall-l'></div><div class='wall-r'></div>" +
+          "<div class='window'><div class='city'></div></div>" +
+          "<div class='desk'></div>" +
+          "<div class='talk-stage'>" +
+            (shot === "call" ? "<div class='video-frame'>" + personHtml(sp) + "<div class='call-tag'>视频通话 · " + sp.name + "</div></div>" : personHtml(sp)) +
+          "</div>" +
+          "<div class='arm l'><div class='hand'></div></div>" +
+          "<div class='arm r'><div class='hand'></div></div>" +
+        "</div></div>" +
+        hud() +
+        "<div class='talk-ui'>" +
+          "<div class='bubble'><div class='who'>" + sp.name + "</div>" +
+          "<div class='spoken' id='spoken'>" + (sp.line || "") + "</div>" +
+          "<div class='scene-cap'>" + (sp.cap || "") + "</div></div>" +
+          "<div class='talk-choices' id='talkChoices'>" + (extra || "") + choicesHtml + "</div>" +
+        "</div>" +
+      "</div>";
+    }
+
+    function typeLine() {
+      const el = document.getElementById("spoken");
+      const box = document.getElementById("talkChoices");
+      if (!el) return;
+      const text = state.talkLine || el.textContent || "";
+      el.textContent = text;
+      if (box) box.className = "talk-choices show";
+      const mouth = document.querySelector(".p-mouth");
+      if (mouth) {
+        setTimeout(function () { mouth.style.animation = "none"; }, 900);
+      }
+    }
+
+    function bindCam() {
+      const cam = document.getElementById("cam");
+      if (!cam) return;
+      const move = function (x, y) {
+        const rx = (x - 0.5) * 8;
+        const ry = (y - 0.5) * -5;
+        cam.style.transform = "rotateY(" + rx + "deg) rotateX(" + ry + "deg)";
+      };
+      window.onmousemove = function (e) {
+        move(e.clientX / window.innerWidth, e.clientY / window.innerHeight);
+      };
+      window.ontouchmove = function (e) {
+        const t = e.touches[0];
+        move(t.clientX / window.innerWidth, t.clientY / window.innerHeight);
+      };
+    }
+
+    function nextScene() {
+      const e = state.game && state.game.event;
+      if (!e) return "play";
+      if (e.fight) return "fight";
+      if (e.minigame) return "boss";
+      return "play";
+    }
+    async function start(careerId) {
+      await req("/api/track", "POST", { event: "game_start", payload: { career: careerId } });
+      state.game = await req("/api/game/start", "POST", { careerId: careerId, userId: state.userId });
+      go(nextScene());
+    }
+    async function choose(optionId) {
+      stopClocks();
+      state.settled = state.game && state.game.event ? state.game.event : null;
+      state.game = await req("/api/game/" + state.game.gameId + "/choose", "POST", { optionId: optionId });
+      if (state.game.skipSettle) {
+        state.toast = state.game.flavor || briefDelta(state.game.applied);
+        return afterSettle();
+      }
+      go("settle");
+    }
+    function briefDelta(applied) {
+      if (!applied) return "";
+      const parts = [];
+      if (applied.money) parts.push("存款 " + sign(applied.money));
+      if (applied.hp) parts.push("身体 " + sign(applied.hp));
+      if (applied.mind) parts.push("心态 " + sign(applied.mind));
+      if (applied.boss) parts.push("老板 " + sign(applied.boss));
+      return parts.join(" · ");
+    }
+    async function minigame(success) {
+      state.settled = state.game && state.game.event ? state.game.event : null;
+      state.game = await req("/api/game/" + state.game.gameId + "/minigame", "POST", { success: success });
+      go("settle");
+    }
+    function stopClocks() {
+      if (state.bossIv) { clearInterval(state.bossIv); state.bossIv = null; }
+      if (state.patrolWait) { clearTimeout(state.patrolWait); state.patrolWait = null; }
+      if (state.patrolIv) { clearInterval(state.patrolIv); state.patrolIv = null; }
+    }
+    function switchWindow(ok, full) {
+      if (state.patrolLock) return;
+      state.patrolLock = true;
+      stopClocks();
+      if (full) return minigame(ok);
+      return patrolHit(ok);
+    }
+    async function patrolHit(ok) {
+      try {
+        const g = await req("/api/game/" + state.game.gameId + "/patrol", "POST", { success: !!ok });
+        if (g.attrs) state.game.attrs = g.attrs;
+        const overlay = document.getElementById("patrol");
+        if (overlay) overlay.className = "patrol gone";
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = g.flavor || (ok ? "切回去了" : "被看见了");
+        const root = document.getElementById("app");
+        if (root) root.appendChild(toast);
+        setTimeout(function () { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 1800);
+      } catch (err) {
+        state.patrolLock = false;
+      }
+    }
+    function startBossClock() {
+      if (state.bossIv) return;
+      state.patrolLock = false;
+      let meters = 5;
+      state.bossIv = setInterval(function () {
+        meters -= 1;
+        const dist = document.getElementById("bossDist");
+        if (dist) dist.textContent = String(Math.max(0, meters));
+        if (meters <= 0) {
+          clearInterval(state.bossIv);
+          state.bossIv = null;
+          if (!state.patrolLock) {
+            state.patrolLock = true;
+            minigame(false);
+          }
+        }
+      }, 1000);
+    }
+    function canPatrol() {
+      const e = state.game && state.game.event;
+      if (!e || e.minigame || e.fight || e.ui === "commute" || e.ui === "phone") return false;
+      const t = e.type;
+      return t === "BOSS" || t === "COLLEAGUE" || t === "CLIENT" || t === "WORK"
+        || t === "SLACK" || t === "SPECIAL" || t === "MONEY";
+    }
+    function startPatrol() {
+      if (!canPatrol()) return;
+      const app = document.getElementById("app");
+      if (!app || document.getElementById("patrol")) return;
+      const g = state.game;
+      const work = g.workApp || "IDEA";
+      const names = g.event.apps || ["IDEA", "Excel", "微信", "股票", "小说"];
+      const tiles = names.map(function (name) {
+        const ok = name === work;
+        return "<button class='app-tile' onclick='event.stopPropagation(); switchWindow(" + ok + ", false)'>" + name +
+          "<small>" + (ok ? "工作窗口" : "先关掉") + "</small></button>";
+      }).join("");
+      app.insertAdjacentHTML("beforeend",
+        "<div id='patrol' class='patrol gone'><div class='foot'>走廊有脚步</div><div class='loom-man'></div>" +
+        "<div class='steps'><i id='patrolBar'></i></div>" +
+        "<div class='warn'>老板溜达到你工位了。立刻切窗口。</div>" +
+        "<div class='boss-meter'>还有 <b id='patrolDist'>4</b> 米</div>" +
+        "<div class='apps'>" + tiles + "</div></div>");
+      state.patrolLock = false;
+      state.patrolWait = setTimeout(function () {
+        const box = document.getElementById("patrol");
+        if (!box) return;
+        box.className = "patrol";
+        let m = 4;
+        state.patrolIv = setInterval(function () {
+          m -= 1;
+          const d = document.getElementById("patrolDist");
+          const b = document.getElementById("patrolBar");
+          if (d) d.textContent = String(Math.max(0, m));
+          if (b) b.style.width = (Math.min(100, (4 - m) / 4 * 100)) + "%";
+          if (m <= 0) {
+            clearInterval(state.patrolIv);
+            state.patrolIv = null;
+            if (!state.patrolLock) switchWindow(false, false);
+          }
+        }, 1000);
+      }, 10000);
+    }
+    async function afterSettle() {
+      const g = state.game;
+      if (g.newSkill) return go("skill");
+      if (g.ending) return go("ending");
+      if (g.event && g.event.minigame) return go("boss");
+      if (g.event && g.event.fight) return go("fight");
+      go("play");
+    }
+    async function watchAd(type) {
+      alert("V0.1 本地预览：假装看完激励视频");
+      state.game = await req("/api/game/" + state.game.gameId + "/ad", "POST", { type: type });
+      if (type === "REWARD") return go("ending");
+      if (state.game.ending) return go("ending");
+      go(nextScene());
+    }
+
+    function home() {
+      return shell(
+        "<div class='home-hero'><div class='muted'>显示器亮着。你还没走。</div>" +
+        "<h1>打工人：活下去</h1>" +
+        "<div class='sub'>你的职场，能撑到第几年？</div>" +
+        "<button class='btn' onclick='go(\"career\")'>开始打工</button>" +
+        "<div class='links'><span onclick='go(\"rank\")'>排行榜</span><span onclick='go(\"book\")'>图鉴</span><span onclick='go(\"settings\")'>设置</span></div>" +
+        "<div class='brand'>每一次选择，都可能改变你的职场人生</div></div>"
+      );
+    }
+    async function career() {
+      const list = await req("/api/careers");
+      return shell(
+        "<button class='back' onclick='go(\"home\")'>← 锁屏</button>" +
+        "<div class='muted' style='margin:8px 0'>选择你今晚要坐的工位</div>" +
+        list.map(function (c) {
+          return "<div class='folder' onclick='start(\"" + c.id + "\")'><b>" + c.name + "</b><div class='muted' style='margin-top:6px'>" + c.blurb + "</div></div>";
+        }).join("")
+      );
+    }
+    function commutePlay(e, choices) {
+      const phase = e.id === "E60" ? "dusk" : (e.id === "E62" ? "lobby" : "dawn");
+      let stage = "<div class='sky'></div><div class='road'></div><div class='ebike'></div>";
+      if (e.id === "E62") stage = "<div class='gate'></div><div class='lift'></div>";
+      else if (e.id === "E60" || e.id === "E61") stage += "<div class='metro-door'></div>";
+      return "<div class='fp talk commute " + phase + "'>" +
+        "<div class='letterbox top'></div><div class='grain'></div><div class='vignette'></div>" +
+        "<div class='fp-cam' id='cam'><div class='fp-breathe'>" +
+          "<div class='ceiling'></div><div class='lamp'></div>" +
+          "<div class='wall-l'></div><div class='wall-r'></div>" +
+          "<div class='window'><div class='city'></div></div><div class='desk'></div>" +
+          "<div class='asset-stage'>" + stage + "</div></div></div>" + hud() +
+        "<div class='talk-ui'><div class='bubble'><div class='who'>" + e.title + "</div>" +
+        "<div class='scene-cap'>" + e.description + "</div></div>" +
+        "<div class='talk-choices show'>" + choices + "</div></div></div>";
+    }
+    function play() {
+      const g = state.game, e = g.event;
+      if (!e) return ending();
+      const sp = speakerOf(e);
+      const choices = e.ui === "commute" ? commuteOptions(e) : choiceButtons(e.options);
+      if (e.ui === "commute") return commutePlay(e, choices);
+      if (e.ui === "phone") {
+        return shell(
+          "<div class='tag'>手机 · 解锁</div>" +
+          "<div class='msg'><div class='title' style='font-size:18px;margin:0 0 6px'>" + e.title + "</div>" +
+          "<div class='muted'>" + e.description + "</div></div>" +
+          "<div class='apps'>" + (e.options || []).map(function (o) {
+            return "<button onclick='choose(\"" + o.id + "\")'>" + o.text.replace(/^打开|^把/, "") + "</button>";
+          }).join("") + "</div>"
+        );
+      }
+      if (sp) return talkShell(sp, choices);
+      return shell(
+        "<div class='tag'>" + e.type + " · 新消息</div>" +
+        "<div class='msg'><div class='title' style='font-size:18px;margin:0 0 6px'>" + e.title + "</div>" +
+        "<div class='muted'>" + e.description + "</div></div>" + choices
+      );
+    }
+    function settleVoice(played, g) {
+      const fightWin = g.lastOptionId === "WIN";
+      const fightLose = g.lastOptionId === "LOSE";
+      if (fightWin) return { tag: "动手 · 你占了上风", lead: "监控还在闪。你先停手。", commute: false };
+      if (fightLose) return { tag: "动手 · 你挨了打", lead: "你被按住了。纸杯还在转。", commute: false };
+      const id = played && played.id;
+      const ui = played && played.ui;
+      if (ui === "commute") {
+        if (id === "E60") return { tag: "回家", lead: "闸机在身后合上了。", commute: true };
+        if (id === "E62") return { tag: "公司", lead: "工牌刷过去了。", commute: true };
+        return { tag: "路上", lead: "这一段路已经走完了。", commute: true };
+      }
+      if (id === "E70") return { tag: "发薪", lead: "扣完五险一金，就是这些。", commute: false };
+      if (ui === "life" || ui === "meal" || ui === "phone" || id === "E26" || id === "E40" || id === "E41" || id === "E42") {
+        return { tag: "晚上", lead: "今天到这里。", commute: false };
+      }
+      return { tag: "工位", lead: "这件事告一段落。", commute: false };
+    }
+    function settle() {
+      const g = state.game;
+      const played = state.settled || g.event;
+      const voice = settleVoice(played, g);
+      const commute = voice.commute;
+      const tag = voice.tag;
+      const lead = voice.lead;
+      const next = commute ? "继续" : "眼睛回到屏幕";
+      return shell(
+        "<div class='tag'>" + tag + "</div>" +
+        "<div class='msg'><div class='muted'>" + lead + "</div>" +
+        "<div class='delta'>" + (deltas(g.applied) || "没有明显变化") + "</div>" +
+        (g.flavor ? "<div class='muted' style='margin-top:8px'>" + g.flavor + "</div>" : "") + "</div>" +
+        (g.status === "ENDED" && g.ending && g.ending.id !== "fired" ? "" :
+          (commute ? "" : "<button class='btn ghost' onclick='watchAd(\"RECHOOSE\")'>看广告，重选一次</button>")) +
+        "<button class='btn' onclick='afterSettle()'>" + next + "</button>"
+      );
+    }
+    function skill() {
+      const s = state.game.newSkill;
+      return shell(
+        "<div class='home-hero'><div class='muted'>技能已安装到本局</div>" +
+        "<h1 style='font-size:24px'>" + s.name + "</h1><div class='sub'>" + s.desc + "</div>" +
+        "<button class='btn' onclick='state.game.newSkill=null; afterSettle()'>收下</button></div>"
+      );
+    }
+    function boss() {
+      const g = state.game, e = g.event;
+      const work = g.workApp || "IDEA";
+      const tiles = (e.apps || ["IDEA", "Excel", "微信", "股票", "小说"]).map(function (app) {
+        const ok = app === work;
+        return "<button class='app-tile' onclick='switchWindow(" + ok + ", true)'>" + app +
+          "<small>" + (ok ? "工作窗口" : "先关掉") + "</small></button>";
+      }).join("");
+      return "<div class='fp talk panic boss-raid'>" +
+        "<div class='letterbox top'></div><div class='grain'></div><div class='vignette'></div>" +
+        "<div class='fp-cam' id='cam'><div class='fp-breathe'>" +
+          "<div class='ceiling'></div><div class='lamp'></div>" +
+          "<div class='wall-l'></div><div class='wall-r'></div>" +
+          "<div class='window'><div class='city'></div></div><div class='desk'></div>" +
+          "<div class='behind'></div></div></div>" + hud() +
+        "<div class='talk-ui'>" +
+          "<div class='warn'>走廊有脚步。切回工作窗口。</div>" +
+          "<div class='boss-meter'>老板还有 <b id='bossDist'>5</b> 米</div>" +
+          "<div class='timer-bar'><i id='bossBar'></i></div>" +
+          "<div class='apps'>" + tiles + "</div>" +
+        "</div></div>";
+    }
+    function fight() {
+      const vsCol = state.game.event && (state.game.event.id === "E24" || state.game.event.id === "E99");
+      const foe = vsCol ? { role: "colleague", name: "同事" } : { role: "boss", name: "老板" };
+      const place = vsCol ? (state.game.event.id === "E99" ? "工位过道" : "楼梯间") : "茶水间";
+      return "<div class='fp talk fight'>" +
+        "<div class='letterbox top'></div><div class='grain'></div><div class='vignette'></div>" +
+        "<div class='fight-flash' id='flash'></div>" +
+        "<div class='fp-cam' id='cam'><div class='fp-breathe'>" +
+          "<div class='ceiling'></div><div class='lamp'></div>" +
+          "<div class='wall-l'></div><div class='wall-r'></div>" +
+          "<div class='window'><div class='city'></div></div><div class='desk'></div>" +
+          "<div class='arena' onclick='punchFight()'>" +
+            "<div class='hp-row'><div class='hp you'><i id='hpYou'></i></div><div class='vs'>VS</div><div class='hp foe'><i id='hpFoe'></i></div></div>" +
+            "<div class='fighter you' id='youF'>" + personHtml({ role: "" }) + "<div class='fist'></div><div class='fname'>你</div></div>" +
+            "<div class='fighter foe' id='foeF'>" + personHtml(foe) + "<div class='fist'></div><div class='fname'>" + foe.name + "</div></div>" +
+            "<div class='cup'></div>" +
+            "<div class='fx' id='fx'>砰</div>" +
+          "</div></div></div>" + hud() +
+        "<div class='fight-ui'><div class='timer-bar'><i></i></div>" +
+        "<div class='fight-meta' id='fightMeta'>" + place + " · 对上 " + foe.name + " · 连点出拳</div>" +
+        "<button class='punch-btn' onclick='event.stopPropagation(); punchFight()'>出拳</button></div></div>";
+    }
+    function setHp() {
+      const you = document.getElementById("hpYou");
+      const foe = document.getElementById("hpFoe");
+      if (you) you.style.width = Math.max(0, state.hpYou) + "%";
+      if (foe) foe.style.width = Math.max(0, state.hpFoe) + "%";
+    }
+    function hitFx(text, youHit) {
+      const you = document.getElementById("youF");
+      const foe = document.getElementById("foeF");
+      const fx = document.getElementById("fx");
+      const flash = document.getElementById("flash");
+      const fp = document.querySelector(".fp.fight");
+      if (youHit) {
+        if (you) { you.className = "fighter you punch-l"; setTimeout(function () { if (!state.fightLock) you.className = "fighter you"; }, 160); }
+        if (foe) { foe.className = "fighter foe shake"; setTimeout(function () { if (!state.fightLock) foe.className = "fighter foe"; }, 200); }
+      } else {
+        if (foe) { foe.className = "fighter foe punch-r"; setTimeout(function () { if (!state.fightLock) foe.className = "fighter foe"; }, 160); }
+        if (you) { you.className = "fighter you shake"; setTimeout(function () { if (!state.fightLock) you.className = "fighter you"; }, 200); }
+      }
+      if (fx) {
+        fx.textContent = text;
+        fx.className = "fx show";
+        setTimeout(function () { fx.className = "fx"; }, 260);
+      }
+      if (flash) {
+        flash.className = "fight-flash on";
+        setTimeout(function () { flash.className = "fight-flash"; }, 80);
+      }
+      if (fp) {
+        fp.classList.add("hit");
+        setTimeout(function () { fp.classList.remove("hit"); }, 180);
+      }
+      setHp();
+    }
+    function punchFight() {
+      if (state.fightLock) return;
+      state.fightHits = (state.fightHits || 0) + 1;
+      state.hpFoe = Math.max(0, (state.hpFoe || 100) - 16);
+      hitFx(["砰", "啪", "咚"][state.fightHits % 3], true);
+      const meta = document.getElementById("fightMeta");
+      if (meta) meta.textContent = "出拳 " + state.fightHits + " 次 · 再快点";
+    }
+    function startFightClock() {
+      if (state.fightTimerStarted) return;
+      state.fightTimerStarted = true;
+      state.fightLock = false;
+      state.fightHits = state.fightHits || 0;
+      setHp();
+      const meta = document.getElementById("fightMeta");
+      state.foeIv = setInterval(function () {
+        if (state.fightLock) return;
+        state.hpYou = Math.max(0, (state.hpYou || 100) - 10);
+        hitFx("挨打", false);
+      }, 900);
+      setTimeout(function () {
+        clearInterval(state.foeIv);
+        state.fightLock = true;
+        if (meta) meta.textContent = "停手！";
+        req("/api/game/" + state.game.gameId + "/fight", "POST", { hits: state.fightHits || 0 }).then(function (g) {
+          state.settled = state.game && state.game.event ? state.game.event : null;
+          state.game = g;
+          go("settle");
+        }).catch(function (e) {
+          alert(e.message);
+        });
+      }, 5000);
+    }
+    function ending() {
+      const g = state.game, ed = g.ending || {}, a = g.attrs;
+      const years = ed.years || Math.max(1, Math.floor(g.day / 365));
+      const hook = ed.shareHook || "你能超过我吗？";
+      const body = [
+        "你活到了 " + g.age + " 岁",
+        "职业：" + g.careerName,
+        "存款：" + fmt(a.money),
+        "年限：" + years + " 年",
+        "",
+        "「" + (ed.name || "被优化") + "」",
+        "",
+        hook
+      ].concat(ed.lines || []).join("<br/>");
+      return shell(
+        "<div class='share msg'>" + body + "</div>" +
+        (g.canRevive ? "<button class='btn' onclick='watchAd(\"REVIVE\")'>看广告复活</button>" : "") +
+        "<button class='btn ghost' onclick='watchAd(\"REWARD\")'>金币 " + g.coins + "，看广告 ×2</button>" +
+        "<button class='btn' onclick='req(\"/api/track\",\"POST\",{event:\"share_click\",gameId:state.game.gameId}); alert(\"" + hook + "\");'>分享给朋友</button>" +
+        "<button class='btn ghost' onclick='req(\"/api/track\",\"POST\",{event:\"game_restart\"}); go(\"career\")'>再来一局</button>"
+      );
+    }
+    async function rank() {
+      const data = state.tab === "wealth" ? await req("/api/rank/wealth") : await req("/api/rank/survive");
+      return shell(
+        "<button class='back' onclick='go(\"home\")'>← 关闭</button>" +
+        "<div class='title' style='font-size:18px'>排行榜</div>" +
+        "<div class='tabs'><button class='" + (state.tab === "survive" ? "on" : "") + "' onclick='state.tab=\"survive\"; go(\"rank\")'>生存榜</button>" +
+        "<button class='" + (state.tab === "wealth" ? "on" : "") + "' onclick='state.tab=\"wealth\"; go(\"rank\")'>财富榜</button></div>" +
+        "<table>" + (data.map(function (r) {
+          return "<tr><td>TOP " + r.rank + "</td><td>" + r.userId + "</td><td>" + (state.tab === "wealth" ? "¥" + fmt(r.money) : "第" + r.day + "天") + "</td></tr>";
+        }).join("") || "<tr><td>还没有人活下来</td></tr>") + "</table>"
+      );
+    }
+    async function book() {
+      const meta = await req("/api/meta");
+      return shell(
+        "<button class='back' onclick='go(\"home\")'>← 关闭</button>" +
+        "<div class='title' style='font-size:18px'>图鉴</div>" +
+        meta.skills.map(function (s) { return "<div class='folder'><b>" + s.name + "</b><div class='muted'>" + s.desc + "</div></div>"; }).join("") +
+        meta.endings.map(function (s) { return "<div class='folder'><b>" + s.name + "</b><div class='muted'>" + (s.lines || []).join(" ") + "</div></div>"; }).join("")
+      );
+    }
+    function settings() {
+      return shell(
+        "<button class='back' onclick='go(\"home\")'>← 关闭</button>" +
+        "<div class='title' style='font-size:18px'>设置</div>" +
+        "<div class='muted' style='margin-bottom:8px'>API 地址</div>" +
+        "<input id='api' value='" + state.api + "' placeholder='http://192.168.1.8:8080' />" +
+        "<button class='btn' onclick='state.api=document.getElementById(\"api\").value.replace(/\\/$/,\"\"); localStorage.setItem(\"dg_api\", state.api); go(\"home\")'>保存</button>"
+      );
+    }
+
+    async function render() {
+      const app = document.getElementById("app");
+      try {
+        if (state.scene === "home") app.innerHTML = home();
+        else if (state.scene === "career") app.innerHTML = await career();
+        else if (state.scene === "play") app.innerHTML = play();
+        else if (state.scene === "settle") app.innerHTML = settle();
+        else if (state.scene === "skill") app.innerHTML = skill();
+        else if (state.scene === "boss") app.innerHTML = boss();
+        else if (state.scene === "fight") app.innerHTML = fight();
+        else if (state.scene === "asset") app.innerHTML = asset();
+        else if (state.scene === "ending") app.innerHTML = ending();
+        else if (state.scene === "rank") app.innerHTML = await rank();
+        else if (state.scene === "book") app.innerHTML = await book();
+        else if (state.scene === "settings") app.innerHTML = settings();
+        bindCam();
+        if (document.getElementById("spoken")) typeLine();
+        if (state.scene === "fight") startFightClock();
+        if (state.scene === "boss") startBossClock();
+        if (state.scene === "play") startPatrol();
+        const dockHtml = dock();
+        if (dockHtml) app.insertAdjacentHTML("beforeend", dockHtml);
+        if (state.toast) {
+          app.insertAdjacentHTML("beforeend", "<div class='toast'>" + state.toast + "</div>");
+          state.toast = "";
+        }
+      } catch (e) {
+        app.innerHTML = "<div class='fp'><div class='lcd' style='position:relative;margin:40px;padding:20px'>请求失败：" + e.message + "<br/><button class='btn' onclick='go(\"home\")'>回工位</button></div></div>";
+      }
+    }
+    render();
+  </script>
+</body>
+</html>

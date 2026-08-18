@@ -1,0 +1,2626 @@
+[
+  {
+    "id": "E01",
+    "type": "BOSS",
+    "weight": 12,
+    "careers": ["ALL"],
+    "title": "今晚留下来加个班？",
+    "description": "老板站在你工位旁边，声音不大，但整个组都听见了。",
+    "options": [
+      {
+        "id": "A",
+        "text": "没问题。",
+        "effects": { "boss": 15, "ability": 5, "hp": -20 },
+        "tags": ["overtime"],
+        "hiddenFlag": "overtime_weight",
+        "hiddenDelta": 15
+      },
+      {
+        "id": "B",
+        "text": "今天有事。",
+        "effects": { "boss": -10, "mind": 8, "slack": 5 },
+        "followUp": "E21"
+      },
+      {
+        "id": "C",
+        "text": "我可以把工作带回家。",
+        "effects": { "boss": 8, "ability": 3, "hp": -12, "mind": -5 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "D",
+        "text": "这个需求明天做不行吗？",
+        "effects": { "boss": -5, "mind": 5 },
+        "chancePercent": 10,
+        "chanceEffects": { "boss": -8 },
+        "chanceText": "老板在小本本上记了一笔。",
+        "followUp": "E21",
+        "followUpChance": 80
+      }
+    ]
+  },
+  {
+    "id": "E02",
+    "type": "CLIENT",
+    "weight": 12,
+    "careers": ["ALL"],
+    "title": "这个很简单，今天能搞定吗？",
+    "description": "对方已经把「简单」说了三遍。你的日历还是空白的。",
+    "variants": {
+      "programmer": {
+        "title": "产品经理来了",
+        "description": "「这个需求很简单，今天能上线吗？」"
+      },
+      "sales": {
+        "title": "客户来催方案",
+        "description": "「你们今天能出一版给我看看吗？我们内部要过会。」"
+      },
+      "admin": {
+        "title": "老板要材料",
+        "description": "「明天会议的材料，今晚能不能好？」"
+      },
+      "finance": {
+        "title": "老板要报表",
+        "description": "「那张表今晚能不能出？我等着用。」"
+      }
+    },
+    "options": [
+      {
+        "id": "A",
+        "text": "可以，马上做。",
+        "effects": { "boss": 12, "hp": -15, "mind": -8, "ability": 4 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "B",
+        "text": "我先评估一下。",
+        "effects": { "boss": 2, "ability": 2 }
+      },
+      {
+        "id": "C",
+        "text": "让对方补齐材料再开始。",
+        "effects": { "boss": -6, "ability": 3, "mind": 5 }
+      },
+      {
+        "id": "D",
+        "text": "假装没看见。",
+        "effects": { "slack": 15, "boss": -8 },
+        "tags": ["slack"],
+        "chancePercent": 30,
+        "chanceEffects": { "boss": -20 },
+        "chanceText": "他站在你身后已经看了很久。"
+      }
+    ]
+  },
+  {
+    "id": "E03",
+    "type": "BOSS",
+    "weight": 10,
+    "careers": ["ALL"],
+    "title": "年终奖你就别多想了",
+    "description": "老板把这句话说得像天气预报。窗外在下雨。",
+    "options": [
+      {
+        "id": "A",
+        "text": "表示理解。",
+        "effects": { "boss": 10, "mind": -15 }
+      },
+      {
+        "id": "B",
+        "text": "委婉争取一下。",
+        "effects": { "boss": -5, "money": 3000, "mind": 5 },
+        "chancePercent": 50,
+        "chanceEffects": { "boss": -10, "money": -3000, "mind": -5 },
+        "chanceText": "争取失败，空气更冷了。"
+      },
+      {
+        "id": "C",
+        "text": "在群里阴阳一句。",
+        "effects": { "slack": 10, "boss": -15, "mind": 8 },
+        "followUp": "E25"
+      },
+      {
+        "id": "D",
+        "text": "默默打开招聘软件。",
+        "effects": { "mind": 10, "slack": 5 },
+        "hiddenFlag": "headhunt_weight",
+        "hiddenDelta": 20
+      }
+    ]
+  },
+  {
+    "id": "E04",
+    "type": "COLLEAGUE",
+    "weight": 10,
+    "careers": ["ALL"],
+    "title": "这个你熟，帮我看一下？",
+    "description": "同事把椅子滑过来，微笑里带着一种熟悉的危险。",
+    "options": [
+      {
+        "id": "A",
+        "text": "立刻帮。",
+        "effects": { "ability": 2, "hp": -8, "mind": -5 },
+        "hiddenFlag": "help_weight",
+        "hiddenDelta": 10
+      },
+      {
+        "id": "B",
+        "text": "教他方法，自己不代劳。",
+        "effects": { "ability": 4, "hp": -4 }
+      },
+      {
+        "id": "C",
+        "text": "让他自己查。",
+        "effects": { "mind": 5, "slack": 5 },
+        "chancePercent": 20,
+        "chanceEffects": { "boss": -8 },
+        "chanceText": "他去老板那儿说你不配合。",
+        "followUp": "E23",
+        "followUpChance": 70
+      },
+      {
+        "id": "D",
+        "text": "帮完让他请下午茶。",
+        "effects": { "money": 50, "mind": 5, "hp": -6 }
+      }
+    ]
+  },
+  {
+    "id": "E05",
+    "type": "COLLEAGUE",
+    "weight": 10,
+    "careers": ["ALL"],
+    "title": "周五团建，不去是不是不合群",
+    "description": "群里已经有人发了「必到」。你还没回复。",
+    "options": [
+      {
+        "id": "A",
+        "text": "去，还当气氛组。",
+        "effects": { "boss": 8, "hp": -15, "mind": -10, "slack": -5 }
+      },
+      {
+        "id": "B",
+        "text": "去，但早退。",
+        "effects": { "boss": 3, "hp": -8, "slack": 8 },
+        "chancePercent": 25,
+        "chanceEffects": { "boss": -10 },
+        "chanceText": "老板在门口看见你溜了。"
+      },
+      {
+        "id": "C",
+        "text": "编个家里有事。",
+        "effects": { "mind": 10, "slack": 5, "boss": -5 }
+      },
+      {
+        "id": "D",
+        "text": "直说不想去。",
+        "effects": { "mind": 15, "boss": -12 }
+      }
+    ]
+  },
+  {
+    "id": "E06",
+    "type": "COLLEAGUE",
+    "weight": 11,
+    "careers": ["ALL"],
+    "title": "群里有人把锅甩给你",
+    "description": "消息一条条跳出来。你的名字被点亮了。",
+    "options": [
+      {
+        "id": "A",
+        "text": "当众撕回去。",
+        "effects": { "mind": 8, "boss": -8, "ability": 2 },
+        "followUp": "E23",
+        "followUpChance": 75
+      },
+      {
+        "id": "B",
+        "text": "私聊对质。",
+        "effects": { "mind": 3 },
+        "chancePercent": 50,
+        "chanceEffects": { "mind": -8, "boss": -4 },
+        "chanceText": "对方不认，还说你玻璃心。"
+      },
+      {
+        "id": "C",
+        "text": "先把事做完再解释。",
+        "effects": { "boss": 10, "hp": -12, "mind": -8, "ability": 5 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "D",
+        "text": "已读不回。",
+        "effects": { "slack": 10, "boss": -5, "mind": -5 }
+      }
+    ]
+  },
+  {
+    "id": "E07",
+    "type": "WORK",
+    "weight": 13,
+    "careers": ["ALL"],
+    "title": "出事了",
+    "description": "警报来了。所有人都在看谁先开口。",
+    "variants": {
+      "programmer": {
+        "title": "生产告警",
+        "description": "群里开始刷错误日志。有人问：谁刚发的版？"
+      },
+      "sales": {
+        "title": "客户现场翻车",
+        "description": "演示卡住了。客户的脸比屏幕还黑。"
+      },
+      "admin": {
+        "title": "会议室撞车",
+        "description": "两个会抢一个房间。老板已经站在门口了。"
+      },
+      "finance": {
+        "title": "账对不上",
+        "description": "差了整整一笔。没人知道它去哪了。"
+      }
+    },
+    "options": [
+      {
+        "id": "A",
+        "text": "扛下来，通宵处理。",
+        "effects": { "ability": 10, "boss": 12, "hp": -25, "mind": -10 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "B",
+        "text": "拉群升级。",
+        "effects": { "boss": 4, "ability": 3, "hp": -8 }
+      },
+      {
+        "id": "C",
+        "text": "先甩锅再处理。",
+        "effects": { "boss": -10, "slack": 8, "mind": 5 },
+        "chancePercent": 30,
+        "chanceEffects": { "boss": -20 },
+        "chanceText": "锅甩回去了，人设也摔碎了。"
+      },
+      {
+        "id": "D",
+        "text": "装没看到，等别人发现。",
+        "effects": { "slack": 15, "boss": -15, "mind": -10 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E08",
+    "type": "WORK",
+    "weight": 10,
+    "careers": ["ALL"],
+    "title": "周报时间到了",
+    "description": "模板还是去年的。你的本周关键词是「推进中」。",
+    "options": [
+      {
+        "id": "A",
+        "text": "认真写，还做了页 PPT。",
+        "effects": { "boss": 8, "ability": 2, "hp": -10, "slack": -5 },
+        "tags": ["ppt"]
+      },
+      {
+        "id": "B",
+        "text": "复制上周，改两个字。",
+        "effects": { "slack": 10, "hp": -2 },
+        "tags": ["slack"],
+        "chancePercent": 20,
+        "chanceEffects": { "boss": -10 },
+        "chanceText": "老板当众点名，让你讲讲「这两个字」。"
+      },
+      {
+        "id": "C",
+        "text": "写得很满，全是空话。",
+        "effects": { "boss": 5, "slack": 8 },
+        "tags": ["ppt"]
+      },
+      {
+        "id": "D",
+        "text": "拖到截止前 3 分钟。",
+        "effects": { "mind": -5, "slack": 5 }
+      }
+    ]
+  },
+  {
+    "id": "E09",
+    "type": "WORK",
+    "weight": 10,
+    "careers": ["ALL"],
+    "title": "跨部门对接，对方不回消息",
+    "description": "你已经发了三遍。对方的头像还是灰色。",
+    "options": [
+      {
+        "id": "A",
+        "text": "继续催。",
+        "effects": { "hp": -8, "mind": -8, "ability": 2 }
+      },
+      {
+        "id": "B",
+        "text": "抄送双方老板。",
+        "effects": { "boss": 5, "mind": -5 }
+      },
+      {
+        "id": "C",
+        "text": "自己先做一版。",
+        "effects": { "hp": -12, "ability": 6, "boss": 6 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "D",
+        "text": "这事暂时不是瓶颈。",
+        "effects": { "slack": 12, "mind": 6 },
+        "chancePercent": 30,
+        "chanceEffects": { "boss": -12 },
+        "chanceText": "延期了。老板问进度时，空气凝固了三秒。"
+      }
+    ]
+  },
+  {
+    "id": "E10",
+    "type": "WORK",
+    "weight": 11,
+    "careers": ["ALL"],
+    "title": "被拉进一个没人要的项目",
+    "description": "群名很长。成员很少。截止日期很近。",
+    "options": [
+      {
+        "id": "A",
+        "text": "主动扛项目经理。",
+        "effects": { "ability": 8, "boss": 10, "hp": -20, "mind": -12 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "B",
+        "text": "做一颗螺丝。",
+        "effects": { "ability": 3, "hp": -8, "boss": 3 }
+      },
+      {
+        "id": "C",
+        "text": "表面答应，实际划水。",
+        "effects": { "slack": 20, "boss": -5 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "D",
+        "text": "找理由退出。",
+        "effects": { "mind": 10, "boss": -10, "slack": 5 }
+      }
+    ]
+  },
+  {
+    "id": "E11",
+    "type": "CLIENT",
+    "weight": 11,
+    "careers": ["ALL"],
+    "title": "对方又改口了",
+    "description": "上一版还没凉。新的一版已经到了。",
+    "variants": {
+      "programmer": {
+        "title": "需求又改了",
+        "description": "上线前夜。产品说：就改一点点。"
+      },
+      "sales": {
+        "title": "合同前改条件",
+        "description": "客户说：条款我们再商量商量。"
+      },
+      "admin": {
+        "title": "领导改会议流程",
+        "description": "通知已经发出去了。流程要重排。"
+      },
+      "finance": {
+        "title": "报销口径又变了",
+        "description": "业务说这次比较特殊。特殊了第三次。"
+      }
+    },
+    "options": [
+      {
+        "id": "A",
+        "text": "全部答应。",
+        "effects": { "boss": 10, "hp": -15, "mind": -12 }
+      },
+      {
+        "id": "B",
+        "text": "要书面确认再改。",
+        "effects": { "ability": 5, "boss": -4, "mind": 4 }
+      },
+      {
+        "id": "C",
+        "text": "拒绝，按原方案。",
+        "effects": { "boss": -12, "mind": 8, "ability": 2 }
+      },
+      {
+        "id": "D",
+        "text": "先答应再拖。",
+        "effects": { "slack": 10, "boss": 2 },
+        "chancePercent": 40,
+        "chanceEffects": { "boss": -15, "mind": -8 },
+        "chanceText": "爆雷了。对方拿着聊天记录来找你。"
+      }
+    ]
+  },
+  {
+    "id": "E12",
+    "type": "CLIENT",
+    "weight": 10,
+    "careers": ["ALL"],
+    "title": "对方要你今晚给结论",
+    "description": "现在是 18:17。结论两个字，听起来比加班更重。",
+    "options": [
+      {
+        "id": "A",
+        "text": "今晚给，质量不管。",
+        "effects": { "boss": 8, "hp": -12, "ability": -3 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "B",
+        "text": "今晚给草稿，明天补。",
+        "effects": { "boss": 5, "hp": -8, "ability": 2 }
+      },
+      {
+        "id": "C",
+        "text": "明确说今晚给不了。",
+        "effects": { "boss": -8, "mind": 6 }
+      },
+      {
+        "id": "D",
+        "text": "丢给同事顶上。",
+        "effects": { "slack": 8, "mind": 4 },
+        "chancePercent": 25,
+        "chanceEffects": { "boss": -8, "mind": -6 },
+        "chanceText": "同事在群里@了你：这个我不太熟。"
+      }
+    ]
+  },
+  {
+    "id": "E13",
+    "type": "MONEY",
+    "weight": 0,
+    "careers": ["ALL"],
+    "title": "工资到账了",
+    "description": "手机震动了一下。这一刻，世界短暂地公平。",
+    "options": [
+      {
+        "id": "A",
+        "text": "全部存着。",
+        "effects": { "mind": 2 },
+        "special": "deposit_salary"
+      },
+      {
+        "id": "B",
+        "text": "拿出 20% 理财。",
+        "effects": {},
+        "special": "invest"
+      },
+      {
+        "id": "C",
+        "text": "请组里吃饭。",
+        "effects": { "money": -800, "boss": 5, "mind": 8 }
+      },
+      {
+        "id": "D",
+        "text": "先清购物车。",
+        "effects": { "money": -2000, "mind": 12, "slack": 5 }
+      }
+    ]
+  },
+  {
+    "id": "E14",
+    "type": "MONEY",
+    "weight": 9,
+    "careers": ["ALL"],
+    "title": "同事开口借 3000",
+    "description": "他说周转几天。几天是一个很有弹性的单位。",
+    "options": [
+      {
+        "id": "A",
+        "text": "借。",
+        "effects": { "money": -3000, "mind": -3 },
+        "chancePercent": 30,
+        "chanceEffects": { "mind": -5 },
+        "chanceText": "他开始不看你的眼睛。"
+      },
+      {
+        "id": "B",
+        "text": "只借 500。",
+        "effects": { "money": -500, "mind": 2 }
+      },
+      {
+        "id": "C",
+        "text": "不借，编没钱。",
+        "effects": { "mind": -5, "slack": 3 }
+      },
+      {
+        "id": "D",
+        "text": "不借，直说。",
+        "effects": { "mind": 5 },
+        "hiddenFlag": "cold_colleague",
+        "hiddenDelta": 1
+      }
+    ]
+  },
+  {
+    "id": "E15",
+    "type": "MINIGAME",
+    "weight": 13,
+    "careers": ["ALL"],
+    "minigame": true,
+    "repeatable": true,
+    "title": "警告！老板距离你还有 5 米",
+    "description": "屏幕还亮着。你必须在三秒内切回工作软件。",
+    "options": []
+  },
+  {
+    "id": "E16",
+    "type": "SLACK",
+    "weight": 11,
+    "careers": ["ALL"],
+    "title": "下午最困的那 20 分钟",
+    "description": "阳光打在桌上。键盘变成了枕头。",
+    "options": [
+      {
+        "id": "A",
+        "text": "刷短视频。",
+        "effects": { "slack": 12, "mind": 8 },
+        "tags": ["slack"],
+        "chancePercent": 25,
+        "chanceEffects": { "boss": -10 },
+        "chanceText": "抬头，老板正在看你的屏幕。"
+      },
+      {
+        "id": "B",
+        "text": "闭眼装思考。",
+        "effects": { "slack": 8, "mind": 5, "hp": 5 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "C",
+        "text": "起来倒水，顺便走一圈。",
+        "effects": { "hp": 8, "slack": 3 }
+      },
+      {
+        "id": "D",
+        "text": "硬撑继续干。",
+        "effects": { "ability": 3, "hp": -10, "mind": -6 },
+        "tags": ["overtime"]
+      }
+    ]
+  },
+  {
+    "id": "E17",
+    "type": "LIFE",
+    "weight": 10,
+    "careers": ["ALL"],
+    "title": "家里来电话，你还在工位",
+    "description": "来电显示是熟悉的号码。群里还在@你。",
+    "options": [
+      {
+        "id": "A",
+        "text": "当场接，讲 20 分钟。",
+        "effects": { "mind": 12, "boss": -8, "slack": 5 }
+      },
+      {
+        "id": "B",
+        "text": "去楼梯间接。",
+        "effects": { "mind": 8, "hp": -3 }
+      },
+      {
+        "id": "C",
+        "text": "回：在开会，稍后打。",
+        "effects": { "mind": -8, "boss": 2 }
+      },
+      {
+        "id": "D",
+        "text": "直接挂断。",
+        "effects": { "mind": -15, "boss": 3 }
+      }
+    ]
+  },
+  {
+    "id": "E18",
+    "type": "LIFE",
+    "weight": 9,
+    "careers": ["ALL"],
+    "title": "体检报告出来了",
+    "description": "有几个箭头朝上。你的日程表更朝上。",
+    "options": [
+      {
+        "id": "A",
+        "text": "请假复查。",
+        "effects": { "hp": 15, "mind": 5, "boss": -6, "money": -200 }
+      },
+      {
+        "id": "B",
+        "text": "先不管，项目更急。",
+        "effects": { "hp": -15, "mind": -10, "boss": 5, "ability": 2 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "C",
+        "text": "开始健身打卡三天。",
+        "effects": { "hp": 8, "mind": 8, "slack": -5 }
+      },
+      {
+        "id": "D",
+        "text": "发朋友圈「还是身体重要」，然后继续加班。",
+        "effects": { "mind": 3, "hp": -8, "slack": 4 }
+      }
+    ]
+  },
+  {
+    "id": "E19",
+    "type": "SPECIAL",
+    "weight": 10,
+    "careers": ["ALL"],
+    "title": "公司要裁员的消息传开了",
+    "description": "没人承认。每个人都在认真工作。认真得不太正常。",
+    "options": [
+      {
+        "id": "A",
+        "text": "加班，表现存在感。",
+        "effects": { "boss": 12, "hp": -18, "mind": -12, "slack": -10 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "B",
+        "text": "该摸还摸。",
+        "effects": { "slack": 15, "mind": 5, "boss": -8 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "C",
+        "text": "更新简历，海投。",
+        "effects": { "mind": 8, "slack": 8 },
+        "hiddenFlag": "headhunt_weight",
+        "hiddenDelta": 25
+      },
+      {
+        "id": "D",
+        "text": "安慰同事、打听消息。",
+        "effects": { "mind": -5 },
+        "chancePercent": 30,
+        "chanceEffects": { "mind": -20 },
+        "chanceText": "你听到了一个名字。是你的。"
+      }
+    ]
+  },
+  {
+    "id": "E20",
+    "type": "SPECIAL",
+    "weight": 8,
+    "careers": ["ALL"],
+    "title": "猎头来电，薪资 +40%",
+    "description": "一个陌生号码。声音很甜。数字更甜。",
+    "options": [
+      {
+        "id": "A",
+        "text": "马上面。",
+        "effects": { "mind": 10, "slack": 5 },
+        "special": "headhunt"
+      },
+      {
+        "id": "B",
+        "text": "用来跟老板谈涨薪。",
+        "effects": {},
+        "special": "raise_talk"
+      },
+      {
+        "id": "C",
+        "text": "已读不回，继续当前局。",
+        "effects": { "mind": -5 }
+      },
+      {
+        "id": "D",
+        "text": "把消息发到同事群「仅供参考」。",
+        "effects": { "slack": 10, "boss": -15, "mind": 8 }
+      }
+    ]
+  },
+  {
+    "id": "E21",
+    "type": "BOSS",
+    "weight": 0,
+    "once": true,
+    "careers": ["ALL"],
+    "title": "会议室里，门关上了",
+    "description": "「昨天不加班，今天还挺忙？」老板把工牌往桌上一拍。",
+    "options": [
+      {
+        "id": "A",
+        "text": "低头认错，今晚补上。",
+        "effects": { "boss": 12, "hp": -18, "mind": -10 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "B",
+        "text": "据理力争，吵一架。",
+        "effects": { "boss": -12, "mind": 10, "ability": 4 },
+        "followUp": "E22",
+        "followUpChance": 70
+      },
+      {
+        "id": "C",
+        "text": "掀桌子，动手。",
+        "effects": { "boss": -8, "mind": 8 },
+        "followUp": "E22"
+      },
+      {
+        "id": "D",
+        "text": "先忍着，一句不接。",
+        "effects": { "boss": -6, "mind": -6, "slack": 8 }
+      }
+    ]
+  },
+  {
+    "id": "E22",
+    "type": "FIGHT",
+    "weight": 0,
+    "repeatable": true,
+    "fight": true,
+    "careers": ["ALL"],
+    "title": "茶水间里动手了",
+    "description": "纸杯飞起来。你和老板同时伸手。",
+    "options": []
+  },
+  {
+    "id": "E23",
+    "type": "COLLEAGUE",
+    "weight": 0,
+    "repeatable": true,
+    "careers": ["ALL"],
+    "title": "下班后他堵在楼梯口",
+    "description": "「你白天挺会装啊。」电梯门还没开。",
+    "options": [
+      {
+        "id": "A",
+        "text": "道歉，当没发生。",
+        "effects": { "mind": -8, "slack": -5 }
+      },
+      {
+        "id": "B",
+        "text": "当众吵回去。",
+        "effects": { "mind": 8, "boss": -6 },
+        "followUp": "E24",
+        "followUpChance": 50
+      },
+      {
+        "id": "C",
+        "text": "推他一把。",
+        "effects": { "mind": 6, "hp": -4 },
+        "followUp": "E24"
+      },
+      {
+        "id": "D",
+        "text": "绕开走，当没看见。",
+        "effects": { "slack": 10, "mind": -4 }
+      }
+    ]
+  },
+  {
+    "id": "E24",
+    "type": "FIGHT",
+    "weight": 0,
+    "repeatable": true,
+    "fight": true,
+    "careers": ["ALL"],
+    "title": "楼梯间打起来了",
+    "description": "工牌甩到地上。监控灯还亮着。",
+    "options": []
+  },
+  {
+    "id": "E25",
+    "type": "BOSS",
+    "weight": 0,
+    "repeatable": true,
+    "careers": ["ALL"],
+    "title": "他在茶水间门口等你",
+    "description": "「你群里那句话，什么意思？」纸杯被捏扁了。",
+    "options": [
+      {
+        "id": "A",
+        "text": "马上认怂，说开玩笑的。",
+        "effects": { "boss": 8, "mind": -12 }
+      },
+      {
+        "id": "B",
+        "text": "跟他对着吵。",
+        "effects": { "boss": -10, "mind": 10 },
+        "followUp": "E22",
+        "followUpChance": 65
+      },
+      {
+        "id": "C",
+        "text": "把纸杯打掉，动手。",
+        "effects": { "boss": -8, "mind": 8 },
+        "followUp": "E22"
+      },
+      {
+        "id": "D",
+        "text": "绕开他，当没听见。",
+        "effects": { "slack": 8, "boss": -6, "mind": -4 }
+      }
+    ]
+  },
+  {
+    "id": "E26",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "life",
+    "careers": ["ALL"],
+    "title": "下班了。灯还亮着",
+    "description": "电梯里有人在刷短视频。你还没决定今晚怎么过。",
+    "options": [
+      {
+        "id": "A",
+        "text": "先吃饭。",
+        "effects": { "hp": 2 },
+        "followUp": "E40"
+      },
+      {
+        "id": "B",
+        "text": "掏出手机。",
+        "effects": { "slack": 4 },
+        "followUp": "E41"
+      },
+      {
+        "id": "C",
+        "text": "倒头就睡。",
+        "effects": { "hp": 10, "mind": 6, "slack": 3 }
+      },
+      {
+        "id": "D",
+        "text": "请一天假，出去透气。",
+        "effects": {},
+        "special": "vacation"
+      }
+    ]
+  },
+  {
+    "id": "E40",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "meal",
+    "careers": ["ALL"],
+    "title": "今晚吃什么",
+    "description": "胃在叫。外卖页还停在上次的麻辣烫。",
+    "options": [
+      {
+        "id": "A",
+        "text": "方便面，就这。",
+        "effects": { "money": -12, "hp": 4, "mind": -3 }
+      },
+      {
+        "id": "B",
+        "text": "公司楼下食堂。",
+        "effects": { "money": -28, "hp": 8 }
+      },
+      {
+        "id": "C",
+        "text": "点外卖，加奶茶。",
+        "effects": { "money": -68, "hp": 12, "mind": 5, "slack": 2 }
+      },
+      {
+        "id": "D",
+        "text": "回家好好吃一顿。",
+        "effects": { "money": -90, "hp": 16, "mind": 10 },
+        "minMoney": 90
+      }
+    ]
+  },
+  {
+    "id": "E41",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "phone",
+    "careers": ["ALL"],
+    "title": "手机亮了",
+    "description": "锁屏是工位一角。你还是解开了。",
+    "options": [
+      {
+        "id": "A",
+        "text": "刷抖音，停不下来。",
+        "effects": { "slack": 10, "mind": 6, "hp": -5, "ability": -2 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "B",
+        "text": "微信吐槽今天的事。",
+        "effects": { "mind": 8, "slack": 4 },
+        "chancePercent": 20,
+        "chanceEffects": { "boss": -8 },
+        "chanceText": "你发错群了。老板在群里。"
+      },
+      {
+        "id": "C",
+        "text": "打开炒股 App。",
+        "effects": { "mind": -2 },
+        "followUp": "E42"
+      },
+      {
+        "id": "D",
+        "text": "把手机扣上。",
+        "effects": { "mind": 4, "hp": 3 }
+      }
+    ]
+  },
+  {
+    "id": "E42",
+    "type": "MONEY",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "stocks",
+    "careers": ["ALL"],
+    "title": "红的绿的",
+    "description": "指数在跳。你的心跳跟着跳。",
+    "options": [
+      {
+        "id": "A",
+        "text": "买一手，搏一下。",
+        "effects": {},
+        "special": "buy_stock"
+      },
+      {
+        "id": "B",
+        "text": "先卖一点。",
+        "effects": {},
+        "special": "sell_stock"
+      },
+      {
+        "id": "C",
+        "text": "看看有没有分红。",
+        "effects": {},
+        "special": "dividend"
+      },
+      {
+        "id": "D",
+        "text": "划掉 App，当没看见。",
+        "effects": { "mind": 5 }
+      }
+    ]
+  },
+  {
+    "id": "E43",
+    "type": "LIFE",
+    "weight": 7,
+    "once": true,
+    "minMoney": 30000,
+    "forbidFlag": "car",
+    "careers": ["ALL"],
+    "title": "销售把车钥匙放在你手上",
+    "description": "「首付 6.8 万。你这个年龄，该有一台了。」地库的灯很白。",
+    "options": [
+      {
+        "id": "A",
+        "text": "首付 6.8 万，提车。",
+        "effects": { "money": -68000, "mind": 12, "slack": 4, "hp": -4 },
+        "minMoney": 68000,
+        "setFlag": "car"
+      },
+      {
+        "id": "B",
+        "text": "再看看，不下单。",
+        "effects": { "mind": -4 }
+      },
+      {
+        "id": "C",
+        "text": "贷款，先付 3.2 万开上。",
+        "effects": { "money": -32000, "mind": 8, "hp": -6 },
+        "minMoney": 32000,
+        "setFlag": "car"
+      },
+      {
+        "id": "D",
+        "text": "算了，地铁就挺好。",
+        "effects": { "mind": 2, "slack": 2 }
+      }
+    ]
+  },
+  {
+    "id": "E44",
+    "type": "LIFE",
+    "weight": 6,
+    "once": true,
+    "minMoney": 80000,
+    "forbidFlag": "house",
+    "careers": ["ALL"],
+    "title": "中介把合同翻到签字页",
+    "description": "样板间很香。窗户对着高架。首付 12.8 万，他说升值空间你懂的。",
+    "options": [
+      {
+        "id": "A",
+        "text": "交首付 12.8 万，买下来。",
+        "effects": { "money": -128000, "mind": 16, "hp": -8 },
+        "minMoney": 128000,
+        "setFlag": "house"
+      },
+      {
+        "id": "B",
+        "text": "换套租金更高的，月租 2500。",
+        "effects": { "money": -2500, "hp": 6, "mind": 4 }
+      },
+      {
+        "id": "C",
+        "text": "继续蜗居。",
+        "effects": { "mind": -6, "slack": 4 }
+      },
+      {
+        "id": "D",
+        "text": "先付定金 4.5 万占着。",
+        "effects": { "money": -45000, "mind": 6 },
+        "minMoney": 45000
+      }
+    ]
+  },
+  {
+    "id": "E45",
+    "type": "LIFE",
+    "weight": 6,
+    "once": true,
+    "minMoney": 25000,
+    "forbidFlag": "married",
+    "careers": ["ALL"],
+    "title": "相亲对象把菜单推过来",
+    "description": "「你加班多吗？」她问得很轻。酒宴按 4.8 万在谈。",
+    "options": [
+      {
+        "id": "A",
+        "text": "把婚结了，酒宴 4.8 万。",
+        "effects": { "money": -48000, "mind": 18, "hp": 6 },
+        "minMoney": 48000,
+        "setFlag": "married"
+      },
+      {
+        "id": "B",
+        "text": "先处着，不谈结婚。",
+        "effects": { "mind": 8, "money": -400 }
+      },
+      {
+        "id": "C",
+        "text": "说工作太忙，先走。",
+        "effects": { "mind": -8, "slack": 3 }
+      },
+      {
+        "id": "D",
+        "text": "把今晚当普通饭局。",
+        "effects": { "money": -300, "mind": 2 }
+      }
+    ]
+  },
+  {
+    "id": "E46",
+    "type": "BOSS",
+    "weight": 8,
+    "once": true,
+    "careers": ["ALL"],
+    "title": "公司要给你一纸期权",
+    "description": "老板说这是绑定未来。HR 把协议从信封里抽出来。",
+    "options": [
+      {
+        "id": "A",
+        "text": "签，当它能兑现。",
+        "effects": { "boss": 8 },
+        "special": "grant_rsu",
+        "setFlag": "rsu"
+      },
+      {
+        "id": "B",
+        "text": "问能不能改成现金。",
+        "effects": { "boss": -6, "mind": 4, "money": 2000 },
+        "chancePercent": 40,
+        "chanceEffects": { "boss": -8, "money": -2000 },
+        "chanceText": "老板说没有这个选项。"
+      },
+      {
+        "id": "C",
+        "text": "不签，怕画饼。",
+        "effects": { "boss": -10, "mind": 6 }
+      },
+      {
+        "id": "D",
+        "text": "先拍照发脉脉。",
+        "effects": { "slack": 8, "boss": -12, "mind": 4 }
+      }
+    ]
+  },
+  {
+    "id": "E47",
+    "type": "MONEY",
+    "weight": 7,
+    "once": true,
+    "requireFlag": "stocks",
+    "careers": ["ALL"],
+    "title": "账户提示：分红到账",
+    "description": "你点开消息。税后数字比想象的小。",
+    "options": [
+      {
+        "id": "A",
+        "text": "收下分红。",
+        "effects": {},
+        "special": "dividend"
+      },
+      {
+        "id": "B",
+        "text": "加仓。",
+        "effects": {},
+        "special": "buy_stock"
+      },
+      {
+        "id": "C",
+        "text": "清一点仓。",
+        "effects": {},
+        "special": "sell_stock"
+      },
+      {
+        "id": "D",
+        "text": "当没看见，继续上班。",
+        "effects": { "mind": 2 }
+      }
+    ]
+  },
+  {
+    "id": "E48",
+    "type": "LIFE",
+    "weight": 6,
+    "once": true,
+    "careers": ["ALL"],
+    "title": "年假将过期",
+    "description": "系统提示还剩 5 天。老板在群里说这周别请假。",
+    "options": [
+      {
+        "id": "A",
+        "text": "请假出去住两晚。",
+        "effects": {},
+        "special": "vacation"
+      },
+      {
+        "id": "B",
+        "text": "请假在家睡。",
+        "effects": { "hp": 14, "mind": 10, "boss": -4, "slack": 6 }
+      },
+      {
+        "id": "C",
+        "text": "作废，留下来加班。",
+        "effects": { "boss": 10, "hp": -12, "mind": -8 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "D",
+        "text": "请半天，装去医院。",
+        "effects": { "hp": 6, "mind": 4, "boss": -2, "slack": 4 }
+      }
+    ]
+  },
+  {
+    "id": "E49",
+    "type": "UNEMPLOYED",
+    "weight": 0,
+    "once": true,
+    "careers": ["ALL"],
+    "title": "组织优化沟通",
+    "description": "HR 把纸巾盒推到你面前。「这是公司的决定。」",
+    "options": [
+      {
+        "id": "A",
+        "text": "去劳动仲裁。",
+        "effects": { "mind": 6, "hp": -4 },
+        "followUp": "E50"
+      },
+      {
+        "id": "B",
+        "text": "找律师，打官司。",
+        "effects": { "money": -3000, "mind": 4 },
+        "minMoney": 3000,
+        "followUp": "E52"
+      },
+      {
+        "id": "C",
+        "text": "马上投简历。",
+        "effects": { "hp": -6 },
+        "followUp": "E51"
+      },
+      {
+        "id": "D",
+        "text": "先躺两天。",
+        "effects": { "mind": -8, "slack": 12, "hp": 6 }
+      }
+    ]
+  },
+  {
+    "id": "E50",
+    "type": "UNEMPLOYED",
+    "weight": 0,
+    "once": true,
+    "careers": ["ALL"],
+    "title": "仲裁庭很亮",
+    "description": "对方律师说这是合法解除。你的工牌已经交回去了。",
+    "options": [
+      {
+        "id": "A",
+        "text": "接受 N+1。",
+        "effects": { "money": 18000, "mind": 6 }
+      },
+      {
+        "id": "B",
+        "text": "要求恢复劳动关系。",
+        "effects": { "mind": 2 },
+        "special": "job_hunt_easy"
+      },
+      {
+        "id": "C",
+        "text": "放弃，去找下一家。",
+        "effects": { "mind": -4 },
+        "followUp": "E51"
+      },
+      {
+        "id": "D",
+        "text": "把过程发到网上。",
+        "effects": { "slack": 10, "mind": 4, "ability": -4 }
+      }
+    ]
+  },
+  {
+    "id": "E51",
+    "type": "UNEMPLOYED",
+    "weight": 0,
+    "repeatable": true,
+    "careers": ["ALL"],
+    "title": "招聘软件还没卸载",
+    "description": "有人已读。有人说岗位关了。有人问你能加班吗。",
+    "options": [
+      {
+        "id": "A",
+        "text": "按老标准海投。",
+        "effects": {},
+        "special": "job_hunt"
+      },
+      {
+        "id": "B",
+        "text": "降薪，先有个工位。",
+        "effects": {},
+        "special": "job_hunt_easy"
+      },
+      {
+        "id": "C",
+        "text": "找同学内推。",
+        "effects": { "mind": 4 },
+        "special": "job_hunt",
+        "chancePercent": 20,
+        "chanceEffects": { "mind": 6 },
+        "chanceText": "同学说他部门还在招。"
+      },
+      {
+        "id": "D",
+        "text": "今天先不投了。",
+        "effects": { "slack": 8, "mind": -4, "hp": 4 }
+      }
+    ]
+  },
+  {
+    "id": "E52",
+    "type": "UNEMPLOYED",
+    "weight": 0,
+    "once": true,
+    "careers": ["ALL"],
+    "title": "律师把证据袋打开",
+    "description": "「加班记录、聊天记录、工资条。有这些，能谈。」",
+    "options": [
+      {
+        "id": "A",
+        "text": "起诉，咬住不放。",
+        "effects": { "money": -2000, "hp": -8 },
+        "minMoney": 2000,
+        "chancePercent": 55,
+        "chanceEffects": { "money": 22000, "mind": 10 },
+        "chanceText": "调解方案出来了。比 N+1 多一截。"
+      },
+      {
+        "id": "B",
+        "text": "和解，拿一笔结束。",
+        "effects": { "money": 12000, "mind": 4 }
+      },
+      {
+        "id": "C",
+        "text": "不打了，省心力。",
+        "effects": { "mind": 6, "hp": 4 }
+      },
+      {
+        "id": "D",
+        "text": "去劳动局门口等。",
+        "effects": { "hp": -6, "mind": 2, "ability": 2 }
+      }
+    ]
+  },
+  {
+    "id": "E53",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "life",
+    "careers": ["ALL"],
+    "title": "待业的一天",
+    "description": "闹钟没响。你还是醒了。简历在桌面上闪。",
+    "options": [
+      {
+        "id": "A",
+        "text": "继续投简历。",
+        "effects": {},
+        "special": "job_hunt",
+        "followUp": "E51",
+        "followUpChance": 40
+      },
+      {
+        "id": "B",
+        "text": "吃泡面，再刷一会。",
+        "effects": { "money": -12, "hp": 4, "mind": -4, "slack": 8 }
+      },
+      {
+        "id": "C",
+        "text": "刷抖音到下午。",
+        "effects": { "slack": 12, "mind": 4, "hp": -6, "ability": -2 }
+      },
+      {
+        "id": "D",
+        "text": "出门走走，想清楚。",
+        "effects": { "hp": 8, "mind": 6, "money": -20 }
+      }
+    ]
+  },
+  {
+    "id": "E60",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "commute",
+    "careers": ["ALL"],
+    "title": "下班了，门口在堵",
+    "description": "闸机滴了一声。地下车库、地铁口、非机动车道，三条路同时亮着。",
+    "alts": [
+      {
+        "title": "下班了，门口在堵",
+        "description": "闸机滴了一声。地下车库、地铁口、非机动车道，三条路同时亮着。"
+      },
+      {
+        "title": "电梯到了一楼",
+        "description": "有人刷完工牌回头看你。保安开始赶人。你还没决定怎么回去。"
+      },
+      {
+        "title": "加班的灯还亮着一半",
+        "description": "工位区只剩两三台显示器。门口风很大。你得选一条路回家。"
+      },
+      {
+        "title": "下雨，门口全是人",
+        "description": "伞不够。网约车显示要等十二分钟。地铁口已经排上了。"
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "开车回家。油费停车 18。",
+        "effects": { "money": -18, "hp": 2, "mind": 3 },
+        "requireFlag": "car",
+        "chancePercent": 22,
+        "chanceEffects": { "mind": -8, "hp": -4 },
+        "chanceText": "高架堵死。导航从 28 分钟跳到 1 小时 12 分。"
+      },
+      {
+        "id": "B",
+        "text": "坐地铁，6 块。",
+        "effects": { "money": -6, "hp": -4, "mind": -3 },
+        "chancePercent": 18,
+        "chanceEffects": { "hp": -6, "mind": -4 },
+        "chanceText": "末班人贴人。有人的背包一直顶着你。"
+      },
+      {
+        "id": "C",
+        "text": "骑电瓶车，2 块充电。",
+        "effects": { "money": -2, "hp": 5, "mind": 2 },
+        "chancePercent": 16,
+        "chanceEffects": { "hp": -10, "mind": -5 },
+        "chanceText": "下雨了。刹车有点滑，裤子湿了。"
+      },
+      {
+        "id": "D",
+        "text": "留下来加班，回头打车。",
+        "effects": { "money": -38, "hp": -12, "mind": -6, "boss": 6, "ability": 2 },
+        "tags": ["overtime"]
+      }
+    ]
+  },
+  {
+    "id": "E61",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "commute",
+    "careers": ["ALL"],
+    "title": "七点四十，该出门了",
+    "description": "窗外已经堵上。你还要选怎么去公司。",
+    "alts": [
+      {
+        "title": "七点四十，该出门了",
+        "description": "窗外已经堵上。你还要选怎么去公司。"
+      },
+      {
+        "title": "闹钟响了第二遍",
+        "description": "牙膏还在嘴里。群里已经有人说在路上了。"
+      },
+      {
+        "title": "下雨了",
+        "description": "伞在公司。楼道里全是湿脚印。你还是要出门。"
+      },
+      {
+        "title": "昨晚睡晚了",
+        "description": "头还沉。电梯按钮被人按着不放。你得选怎么去。"
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "开车去。油费停车 18。",
+        "effects": { "money": -18, "hp": 2, "mind": 4 },
+        "requireFlag": "car",
+        "chancePercent": 20,
+        "chanceEffects": { "boss": -6, "mind": -5 },
+        "chanceText": "地库出口卡了十分钟。你迟到了。"
+      },
+      {
+        "id": "B",
+        "text": "坐地铁，6 块。",
+        "effects": { "money": -6, "hp": -3, "mind": -2 },
+        "chancePercent": 22,
+        "chanceEffects": { "boss": -8, "mind": -4, "hp": -3 },
+        "chanceText": "信号故障，车门开了又关。群里已经在@你。"
+      },
+      {
+        "id": "C",
+        "text": "骑电瓶车，2 块。",
+        "effects": { "money": -2, "hp": 6, "mind": 2 },
+        "chancePercent": 15,
+        "chanceEffects": { "hp": -8, "mind": -3 },
+        "chanceText": "非机动车道被一排共享单车堵住。你只好抬车。"
+      },
+      {
+        "id": "D",
+        "text": "打车去公司，35。",
+        "effects": { "money": -35, "hp": 3, "mind": 3 },
+        "minMoney": 35
+      }
+    ]
+  },
+  {
+    "id": "E62",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "commute",
+    "careers": ["ALL"],
+    "title": "到公司了",
+    "description": "大堂的冷气很足。闸机、电梯、咖啡机，都在转。",
+    "options": [
+      {
+        "id": "A",
+        "text": "买杯咖啡，18。",
+        "effects": { "money": -18, "mind": 5, "hp": 3 },
+        "minMoney": 18
+      },
+      {
+        "id": "B",
+        "text": "挤电梯，刷工牌进去。",
+        "effects": { "hp": -2 },
+        "chancePercent": 25,
+        "chanceEffects": { "boss": 4 },
+        "chanceText": "电梯里碰到老板。他点了下头。"
+      },
+      {
+        "id": "C",
+        "text": "直接坐工位，打开软件。",
+        "effects": { "ability": 2, "mind": -2 }
+      },
+      {
+        "id": "D",
+        "text": "先去厕所躲两分钟。",
+        "effects": { "slack": 6, "mind": 3 },
+        "chancePercent": 15,
+        "chanceEffects": { "boss": -6 },
+        "chanceText": "你出来时，老板站在工位旁边。"
+      }
+    ]
+  },
+  {
+    "id": "E70",
+    "type": "MONEY",
+    "weight": 0,
+    "repeatable": true,
+    "careers": ["ALL"],
+    "title": "工资到账",
+    "description": "银行短信响了一下。税后数字比你想的少。",
+    "options": [
+      {
+        "id": "A",
+        "text": "全存起来。",
+        "effects": { "mind": 3 },
+        "special": "payday"
+      },
+      {
+        "id": "B",
+        "text": "先还一笔花呗。",
+        "effects": { "money": -500, "mind": 5 },
+        "special": "payday"
+      },
+      {
+        "id": "C",
+        "text": "请组里喝下午茶。",
+        "effects": { "money": -200, "boss": 4, "mind": 2 },
+        "special": "payday"
+      },
+      {
+        "id": "D",
+        "text": "看完余额，把短信删掉。",
+        "effects": { "slack": 2 },
+        "special": "payday"
+      }
+    ]
+  },
+  {
+    "id": "E71",
+    "type": "COLLEAGUE",
+    "weight": 14,
+    "careers": ["ALL"],
+    "title": "站会，到你了",
+    "description": "「昨天干了啥？今天计划？有没有卡点？」所有人都在看笔记本，没人看你。",
+    "options": [
+      {
+        "id": "A",
+        "text": "把进度讲清楚，把风险也说了。",
+        "effects": { "ability": 4, "boss": 6, "hp": -6 }
+      },
+      {
+        "id": "B",
+        "text": "说在推进，细节会后对齐。",
+        "effects": { "slack": 6, "boss": 1 }
+      },
+      {
+        "id": "C",
+        "text": "把卡点丢给产品。",
+        "effects": { "mind": 4, "boss": -6 },
+        "chancePercent": 25,
+        "chanceEffects": { "boss": -10 },
+        "chanceText": "产品当场回了一句：需求上周就定了。"
+      },
+      {
+        "id": "D",
+        "text": "网卡了一下，你静音到下一位。",
+        "effects": { "slack": 10, "mind": 3, "boss": -4 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E72",
+    "type": "WORK",
+    "weight": 15,
+    "careers": ["ALL"],
+    "title": "这条让 AI 先写？",
+    "description": "光标在闪。你可以把脏活丢给模型，也可以自己啃。",
+    "variants": {
+      "programmer": {
+        "title": "这段代码让 AI 写？",
+        "description": "注释都懒得写。旁边窗口已经打开了对话。"
+      },
+      "sales": {
+        "title": "方案让 AI 出一版？",
+        "description": "客户晚上要。空白页很白。"
+      },
+      "admin": {
+        "title": "通知让 AI 起草？",
+        "description": "全员邮件。用词不能错，你又不想从零写。"
+      },
+      "finance": {
+        "title": "对账说明让 AI 先写？",
+        "description": "数字你有。句子还没有。"
+      }
+    },
+    "options": [
+      {
+        "id": "A",
+        "text": "让 AI 干，自己改一改就交。",
+        "effects": { "slack": 8, "ability": 2, "hp": -4, "mind": 4 },
+        "tags": ["slack"],
+        "chancePercent": 28,
+        "chanceEffects": { "boss": -12, "ability": -4 },
+        "chanceText": "里面有一句很自信的胡话。老板问：这谁写的？"
+      },
+      {
+        "id": "B",
+        "text": "自己写，AI 只查漏。",
+        "effects": { "ability": 6, "hp": -10, "mind": -4 }
+      },
+      {
+        "id": "C",
+        "text": "AI 原文发出去，赶上点。",
+        "effects": { "slack": 12, "hp": 2, "boss": -4 },
+        "chancePercent": 45,
+        "chanceEffects": { "boss": -18, "mind": -8 },
+        "chanceText": "有人搜到了同样的段落。群里安静了三秒。"
+      },
+      {
+        "id": "D",
+        "text": "把提示词发同事，让他去喂。",
+        "effects": { "slack": 6, "mind": 2 },
+        "chancePercent": 20,
+        "chanceEffects": { "boss": -8 },
+        "chanceText": "他截图发群里：这活不是你的吗。"
+      }
+    ]
+  },
+  {
+    "id": "E73",
+    "type": "COLLEAGUE",
+    "weight": 13,
+    "careers": ["ALL"],
+    "title": "同事私聊：你怎么看",
+    "description": "「老板刚才那句，是不是点你？」气泡还在跳。",
+    "options": [
+      {
+        "id": "A",
+        "text": "认真复盘，把事实写给他。",
+        "effects": { "ability": 3, "mind": 4, "hp": -4 }
+      },
+      {
+        "id": "B",
+        "text": "一起吐槽，但别留字。",
+        "effects": { "mind": 8, "slack": 5 },
+        "chancePercent": 15,
+        "chanceEffects": { "boss": -10 },
+        "chanceText": "你发到工作群了。撤回得不够快。"
+      },
+      {
+        "id": "C",
+        "text": "劝他别聊这个。",
+        "effects": { "boss": 3, "mind": -3 }
+      },
+      {
+        "id": "D",
+        "text": "已读。去倒了杯水。",
+        "effects": { "slack": 6, "mind": -2 }
+      }
+    ]
+  },
+  {
+    "id": "E74",
+    "type": "WORK",
+    "weight": 13,
+    "careers": ["ALL"],
+    "title": "评审会上，有人皱眉",
+    "description": "激光笔停在你那页。有人说：这个我没看懂。",
+    "variants": {
+      "programmer": {
+        "title": "Code Review 被卡住",
+        "description": "「这函数谁敢上生产？」评论区已经三条。"
+      },
+      "sales": {
+        "title": "方案页被客户追问",
+        "description": "「折扣是谁批的？」你的耳朵开始热。"
+      },
+      "admin": {
+        "title": "流程被当场质疑",
+        "description": "「为什么要多签一档？」会议室里有人笑了一下。"
+      },
+      "finance": {
+        "title": "口径被业务挑战",
+        "description": "「这数跟我们这边对不上。」桌子对面在等你。"
+      }
+    },
+    "options": [
+      {
+        "id": "A",
+        "text": "当场讲清楚，把锅圆上。",
+        "effects": { "ability": 6, "boss": 6, "hp": -8, "mind": -4 }
+      },
+      {
+        "id": "B",
+        "text": "记下问题，会后补一版。",
+        "effects": { "ability": 3, "boss": 3, "hp": -6 }
+      },
+      {
+        "id": "C",
+        "text": "说是按领导上次的口径。",
+        "effects": { "mind": 4, "boss": -8 }
+      },
+      {
+        "id": "D",
+        "text": "看手机，等下一位被喷。",
+        "effects": { "slack": 8, "boss": -6, "mind": 2 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E75",
+    "type": "CLIENT",
+    "weight": 8,
+    "careers": ["ALL"],
+    "title": "上线窗口被提前了",
+    "description": "「这周五必须上。」原计划是下下周五。测试还没排上。",
+    "options": [
+      {
+        "id": "A",
+        "text": "接，今晚改完。",
+        "effects": { "boss": 8, "ability": 3, "hp": -14, "mind": -6 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "B",
+        "text": "让对方出变更说明再动。",
+        "effects": { "ability": 4, "mind": 4, "boss": -3 }
+      },
+      {
+        "id": "C",
+        "text": "拉老板进来顶一下。",
+        "effects": { "boss": -4, "mind": 2 },
+        "chancePercent": 40,
+        "chanceEffects": { "boss": 5 },
+        "chanceText": "老板说这次先做。你还是要做。"
+      },
+      {
+        "id": "D",
+        "text": "假装没看到，先把手头做完。",
+        "effects": { "slack": 8, "ability": 2, "boss": -6 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E76",
+    "type": "BOSS",
+    "weight": 12,
+    "once": true,
+    "careers": ["ALL"],
+    "title": "老板约你 1 对 1",
+    "description": "会议室门关着。他问：你最近状态怎么样？",
+    "options": [
+      {
+        "id": "A",
+        "text": "谈目标，把成绩摊开。",
+        "effects": { "boss": 10, "ability": 4, "mind": 4, "hp": -6 }
+      },
+      {
+        "id": "B",
+        "text": "谈困难，要人要时间。",
+        "effects": { "mind": 6, "boss": 2 },
+        "chancePercent": 40,
+        "chanceEffects": { "boss": -8 },
+        "chanceText": "他说资源都在刀刃上。你听懂了。"
+      },
+      {
+        "id": "C",
+        "text": "说都挺好，没有问题。",
+        "effects": { "boss": 4, "mind": -8 }
+      },
+      {
+        "id": "D",
+        "text": "把话题转到加班费。",
+        "effects": { "mind": 4, "money": 800, "boss": -6 },
+        "chancePercent": 50,
+        "chanceEffects": { "money": -800, "boss": -8 },
+        "chanceText": "他笑了一下。这个月没有。"
+      }
+    ]
+  },
+  {
+    "id": "E77",
+    "type": "COLLEAGUE",
+    "weight": 12,
+    "careers": ["ALL"],
+    "title": "共享文档里你的段落没了",
+    "description": "修订记录显示：10:17 被覆盖。那个人还在线。",
+    "options": [
+      {
+        "id": "A",
+        "text": "评论里问：这是误操作吗？",
+        "effects": { "ability": 2, "mind": 2 }
+      },
+      {
+        "id": "B",
+        "text": "私聊对质。",
+        "effects": { "mind": 6 },
+        "chancePercent": 35,
+        "chanceEffects": { "mind": -8, "boss": -4 },
+        "chanceText": "他说你那版本来就不对。你没截图。"
+      },
+      {
+        "id": "C",
+        "text": "从历史记录抢回来，截图存着。",
+        "effects": { "ability": 4, "slack": 3, "hp": -4 }
+      },
+      {
+        "id": "D",
+        "text": "算了，重写一版。",
+        "effects": { "hp": -10, "mind": -6, "ability": 2 },
+        "tags": ["overtime"]
+      }
+    ]
+  },
+  {
+    "id": "E78",
+    "type": "COLLEAGUE",
+    "weight": 11,
+    "careers": ["ALL"],
+    "title": "有人喊你下楼吃饭",
+    "description": "电梯口已经聚了三个人。工位上的盒饭还没拆。",
+    "options": [
+      {
+        "id": "A",
+        "text": "去，听他们聊项目和八卦。",
+        "effects": { "mind": 8, "hp": 4, "money": -45, "slack": 4 }
+      },
+      {
+        "id": "B",
+        "text": "去，但很快回来赶活。",
+        "effects": { "mind": 4, "money": -38, "hp": -4, "ability": 2 }
+      },
+      {
+        "id": "C",
+        "text": "不去，工位解决。",
+        "effects": { "money": -22, "hp": -2, "mind": -4, "ability": 2 }
+      },
+      {
+        "id": "D",
+        "text": "说去，实际去便利店躲一会。",
+        "effects": { "slack": 8, "mind": 3, "money": -16 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E79",
+    "type": "COLLEAGUE",
+    "weight": 13,
+    "careers": ["ALL"],
+    "title": "工作群炸了",
+    "description": "「@所有人 这个谁负责？」下面已经叠了十几条。有人把你的名字打出来了。",
+    "options": [
+      {
+        "id": "A",
+        "text": "回：我来跟，十分钟给结论。",
+        "effects": { "ability": 5, "boss": 6, "hp": -8 }
+      },
+      {
+        "id": "B",
+        "text": "私聊真正干活的人，先对齐。",
+        "effects": { "ability": 4, "mind": 2, "hp": -6 }
+      },
+      {
+        "id": "C",
+        "text": "回：这个问题要分场景。先把锅摊开。",
+        "effects": { "mind": 4, "boss": -5 },
+        "chancePercent": 30,
+        "chanceEffects": { "boss": -10 },
+        "chanceText": "老板回了一句：先解决问题。"
+      },
+      {
+        "id": "D",
+        "text": "已读。把手机扣过去。",
+        "effects": { "slack": 10, "mind": 3, "boss": -8 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E80",
+    "type": "WORK",
+    "weight": 14,
+    "careers": ["ALL"],
+    "title": "把这条活干完",
+    "description": "文档、表格、待办，都堆在屏幕上。没有人再催你。你知道这才是正事。",
+    "variants": {
+      "programmer": {
+        "title": "把这条缺陷修掉",
+        "description": "复现步骤写着偶现。日志里全是噪音。光标停在可疑的那一行。"
+      },
+      "sales": {
+        "title": "把这版方案磨完",
+        "description": "页脚还是上次的客户名。数字要对，语气也要对。"
+      },
+      "admin": {
+        "title": "把这批流程走完",
+        "description": "待办 17 条。有人卡在你这一环，还在催。"
+      },
+      "finance": {
+        "title": "把这张表对完",
+        "description": "差了 87 块。你知道它藏在某一行的备注里。"
+      }
+    },
+    "options": [
+      {
+        "id": "A",
+        "text": "埋头干，中午不出去。",
+        "effects": { "ability": 8, "hp": -12, "mind": -4, "boss": 4 }
+      },
+      {
+        "id": "B",
+        "text": "拆开，先做能交差的那一块。",
+        "effects": { "ability": 5, "hp": -8, "slack": 2 }
+      },
+      {
+        "id": "C",
+        "text": "丢给 AI，自己盯着改。",
+        "effects": { "ability": 4, "slack": 6, "hp": -6, "mind": 2 },
+        "tags": ["slack"],
+        "chancePercent": 22,
+        "chanceEffects": { "ability": -3, "boss": -8 },
+        "chanceText": "AI 把关键数字写反了。你差点发出去。"
+      },
+      {
+        "id": "D",
+        "text": "先回消息，活留到晚上。",
+        "effects": { "slack": 8, "mind": 2, "hp": -4, "ability": -2 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E81",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "life",
+    "careers": ["ALL"],
+    "title": "快递柜满了",
+    "description": "短信写：已放门口。楼道灯坏了一盏。纸箱还在出汗。",
+    "options": [
+      {
+        "id": "A",
+        "text": "马上拎上去，拆开看看。",
+        "effects": { "hp": -4, "mind": 4 }
+      },
+      {
+        "id": "B",
+        "text": "先丢门口，明天再说。",
+        "effects": { "slack": 4, "mind": -2 },
+        "chancePercent": 25,
+        "chanceEffects": { "mind": -8, "money": -30 },
+        "chanceText": "邻居说被雨淋了。你赔了一箱面膜。"
+      },
+      {
+        "id": "C",
+        "text": "不管了，先睡觉。",
+        "effects": { "hp": 8, "mind": 4 }
+      },
+      {
+        "id": "D",
+        "text": "让骑手改送到公司。",
+        "effects": { "slack": 3, "mind": 2 },
+        "chancePercent": 30,
+        "chanceEffects": { "boss": -4 },
+        "chanceText": "前台第二天举着你的快递问：谁的内裤。"
+      }
+    ]
+  },
+  {
+    "id": "E82",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "life",
+    "careers": ["ALL"],
+    "title": "合租卫生间一直占着",
+    "description": "门缝透出蒸汽。里面在放歌。你已经等了十一分钟。",
+    "options": [
+      {
+        "id": "A",
+        "text": "敲一下，问还要多久。",
+        "effects": { "mind": 2, "hp": -2 }
+      },
+      {
+        "id": "B",
+        "text": "去便利店上。",
+        "effects": { "money": -4, "mind": -3, "hp": -2 }
+      },
+      {
+        "id": "C",
+        "text": "算了，倒头就睡。",
+        "effects": { "hp": 8, "mind": 3 }
+      },
+      {
+        "id": "D",
+        "text": "在群里发一张门的照片。",
+        "effects": { "mind": 6, "slack": 4 },
+        "chancePercent": 20,
+        "chanceEffects": { "mind": -8 },
+        "chanceText": "他回：你有病吧。气氛冷到第二天。"
+      }
+    ]
+  },
+  {
+    "id": "E83",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "life",
+    "careers": ["ALL"],
+    "title": "游戏里有人在喊你",
+    "description": "耳机还挂在椅子上。语音里已经开始选人。",
+    "options": [
+      {
+        "id": "A",
+        "text": "上号。再来一把。",
+        "effects": { "mind": 10, "hp": -8, "slack": 8 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "B",
+        "text": "打两把就睡。",
+        "effects": { "mind": 6, "hp": -4, "slack": 4 }
+      },
+      {
+        "id": "C",
+        "text": "说困了，直接关机。",
+        "effects": { "hp": 10, "mind": 2 }
+      },
+      {
+        "id": "D",
+        "text": "挂着听，自己刷手机。",
+        "effects": { "slack": 6, "mind": 3, "hp": -2 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E84",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "life",
+    "careers": ["ALL"],
+    "title": "物业群说今晚停水",
+    "description": "通知发在 21:17。停水从 22:00 开始。你还没洗。",
+    "options": [
+      {
+        "id": "A",
+        "text": "赶紧洗，接两桶备用。",
+        "effects": { "hp": 4, "mind": -2 }
+      },
+      {
+        "id": "B",
+        "text": "去健身房洗。",
+        "effects": { "money": -39, "hp": 8, "mind": 4 }
+      },
+      {
+        "id": "C",
+        "text": "不洗了，睡觉。",
+        "effects": { "hp": 6, "mind": -4, "slack": 3 }
+      },
+      {
+        "id": "D",
+        "text": "在群里质问为什么现在才说。",
+        "effects": { "mind": 6 },
+        "chancePercent": 35,
+        "chanceEffects": { "mind": -6 },
+        "chanceText": "物业回：已读。没有下文。"
+      }
+    ]
+  },
+  {
+    "id": "E85",
+    "type": "LIFE",
+    "weight": 0,
+    "repeatable": true,
+    "ui": "life",
+    "careers": ["ALL"],
+    "title": "躺下了，白天那句话还在转",
+    "description": "天花板很白。你想起会上有人停了一下，看你。",
+    "options": [
+      {
+        "id": "A",
+        "text": "爬起来把白天的活补两行。",
+        "effects": { "ability": 4, "hp": -8, "mind": -4, "boss": 2 },
+        "tags": ["overtime"]
+      },
+      {
+        "id": "B",
+        "text": "写进备忘录，明天再说。",
+        "effects": { "mind": 4, "ability": 1 }
+      },
+      {
+        "id": "C",
+        "text": "不管，睡。",
+        "effects": { "hp": 10, "mind": 4 }
+      },
+      {
+        "id": "D",
+        "text": "把那句话发到吐槽群。",
+        "effects": { "mind": 8, "slack": 4 },
+        "chancePercent": 18,
+        "chanceEffects": { "boss": -8, "mind": -6 },
+        "chanceText": "有人截图了。你不敢问是谁。"
+      }
+    ]
+  },
+  {
+    "id": "E86",
+    "type": "WORK",
+    "weight": 13,
+    "careers": ["ALL"],
+    "title": "打印机卡着一份合同",
+    "description": "红灯在闪。夹缝里露出「保密」两个字。后面还有人等。",
+    "options": [
+      {
+        "id": "A",
+        "text": "打开盖子，小心地抽。",
+        "effects": { "ability": 3, "hp": -6, "boss": 4 }
+      },
+      {
+        "id": "B",
+        "text": "喊行政，自己先走。",
+        "effects": { "slack": 4, "mind": 2 }
+      },
+      {
+        "id": "C",
+        "text": "换一台，这份当没看见。",
+        "effects": { "slack": 6, "boss": -4 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "D",
+        "text": "拍一张给群里：谁的合同。",
+        "effects": { "mind": 3 },
+        "chancePercent": 30,
+        "chanceEffects": { "boss": -10 },
+        "chanceText": "老板说这是给董事会的。你不该拍。"
+      }
+    ]
+  },
+  {
+    "id": "E87",
+    "type": "BOSS",
+    "weight": 13,
+    "careers": ["ALL"],
+    "title": "KPI 表上你是红灯",
+    "description": "共享屏幕停在你那一行。数字比上周更红。",
+    "options": [
+      {
+        "id": "A",
+        "text": "当场解释客观原因。",
+        "effects": { "ability": 3, "boss": 2, "hp": -6, "mind": -4 }
+      },
+      {
+        "id": "B",
+        "text": "认，说明周补计划。",
+        "effects": { "boss": 6, "hp": -8, "ability": 2 }
+      },
+      {
+        "id": "C",
+        "text": "问口径是不是又改了。",
+        "effects": { "mind": 4, "boss": -6 },
+        "followUp": "E25",
+        "followUpChance": 55
+      },
+      {
+        "id": "D",
+        "text": "看别人的格子，等轮过去。",
+        "effects": { "slack": 6, "mind": -2, "boss": -4 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E88",
+    "type": "WORK",
+    "weight": 12,
+    "careers": ["ALL"],
+    "title": "电脑要强制更新",
+    "description": "弹窗写：17 分钟。保存提示已经跳过了。光标还在闪。",
+    "variants": {
+      "programmer": {
+        "title": "系统要重启，本地没推送",
+        "description": "分支还在你机器上。弹窗不给取消。"
+      },
+      "sales": {
+        "title": "电脑更新，方案还没另存",
+        "description": "客户名改到一半。进度条已经开始了。"
+      },
+      "admin": {
+        "title": "电脑更新，审批停在你屏幕上",
+        "description": "有人在催。重启要 17 分钟。"
+      },
+      "finance": {
+        "title": "电脑更新，表还没存",
+        "description": "公式刚调通。弹窗不讲道理。"
+      }
+    },
+    "options": [
+      {
+        "id": "A",
+        "text": "狂按保存，赌它来得及。",
+        "effects": { "hp": -6, "ability": 2 },
+        "chancePercent": 40,
+        "chanceEffects": { "ability": -6, "mind": -8, "boss": -4 },
+        "chanceText": "没存上。你对着桌面空白坐了很久。"
+      },
+      {
+        "id": "B",
+        "text": "拔网线，先把文件拷走。",
+        "effects": { "ability": 4, "hp": -4, "slack": 2 }
+      },
+      {
+        "id": "C",
+        "text": "让它更。去倒水。",
+        "effects": { "slack": 8, "mind": 4, "hp": 2 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "D",
+        "text": "拖着不点，继续用。",
+        "effects": { "ability": 3, "hp": -4 },
+        "chancePercent": 35,
+        "chanceEffects": { "mind": -6, "hp": -4 },
+        "chanceText": "它自己重启了。你眼睁睁看着。"
+      }
+    ]
+  },
+  {
+    "id": "E89",
+    "type": "COLLEAGUE",
+    "weight": 12,
+    "careers": ["ALL"],
+    "title": "实习生拉了一张凳子",
+    "description": "「这个我看了文档，还是不太懂。」文档是你去年写的。",
+    "options": [
+      {
+        "id": "A",
+        "text": "讲清楚，顺便把文档补上。",
+        "effects": { "ability": 5, "hp": -10, "mind": 2, "boss": 3 }
+      },
+      {
+        "id": "B",
+        "text": "丢给他三个链接，让他自己看。",
+        "effects": { "slack": 4, "ability": 1, "mind": 2 }
+      },
+      {
+        "id": "C",
+        "text": "说你也忙，让他问别人。",
+        "effects": { "slack": 6, "mind": 3, "boss": -4 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "D",
+        "text": "让他自己先做一版再来。",
+        "effects": { "ability": 3, "mind": 4 }
+      }
+    ]
+  },
+  {
+    "id": "E90",
+    "type": "COLLEAGUE",
+    "weight": 13,
+    "careers": ["ALL"],
+    "title": "会议纪要写你同意了",
+    "description": "你记得自己当时在点头，但点的是困。发出去的句子是：全员无异议。",
+    "options": [
+      {
+        "id": "A",
+        "text": "评论区更正：我没同意这条。",
+        "effects": { "ability": 4, "mind": 4, "boss": -3 },
+        "followUp": "E23",
+        "followUpChance": 45
+      },
+      {
+        "id": "B",
+        "text": "私下找记录人改。",
+        "effects": { "mind": 2, "hp": -4 },
+        "chancePercent": 40,
+        "chanceEffects": { "boss": -6 },
+        "chanceText": "他说已经同步老板了。来不及改。"
+      },
+      {
+        "id": "C",
+        "text": "认。后面再找补。",
+        "effects": { "boss": 2, "mind": -8, "hp": -6 }
+      },
+      {
+        "id": "D",
+        "text": "装没看见。",
+        "effects": { "slack": 8, "mind": -4, "boss": 1 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E91",
+    "type": "WORK",
+    "weight": 12,
+    "careers": ["ALL"],
+    "title": "系统权限过期了",
+    "description": "提示：请联系上级审批。上级在开会。你的待办还在转圈。",
+    "options": [
+      {
+        "id": "A",
+        "text": "填申请，挂在审批上。",
+        "effects": { "ability": 2, "hp": -4, "mind": -2 }
+      },
+      {
+        "id": "B",
+        "text": "借同事账号先做。",
+        "effects": { "slack": 4, "ability": 2 },
+        "chancePercent": 28,
+        "chanceEffects": { "boss": -12, "mind": -6 },
+        "chanceText": "审计弹了窗口。你的工号出现在别人的操作里。"
+      },
+      {
+        "id": "C",
+        "text": "发消息把卡点甩出去。",
+        "effects": { "mind": 4, "boss": -4 }
+      },
+      {
+        "id": "D",
+        "text": "权限没有，正好摸一会。",
+        "effects": { "slack": 10, "mind": 6, "ability": -2 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E92",
+    "type": "CLIENT",
+    "weight": 12,
+    "careers": ["ALL"],
+    "title": "前台说客人到了",
+    "description": "对接人还在电梯里。客人已经站在玻璃门后面。前台看你。",
+    "options": [
+      {
+        "id": "A",
+        "text": "先接，客套着等正主。",
+        "effects": { "boss": 6, "ability": 3, "hp": -6, "mind": 2 }
+      },
+      {
+        "id": "B",
+        "text": "倒杯水，打电话催对接人。",
+        "effects": { "ability": 2, "hp": -4 }
+      },
+      {
+        "id": "C",
+        "text": "说你不是对接人，转身走。",
+        "effects": { "slack": 6, "boss": -8, "mind": 2 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "D",
+        "text": "带去会议室，先闲聊。",
+        "effects": { "boss": 4, "mind": 4, "hp": -4 }
+      }
+    ]
+  },
+  {
+    "id": "E93",
+    "type": "WORK",
+    "weight": 13,
+    "careers": ["ALL"],
+    "title": "为一个词吵了半小时",
+    "description": "屏幕上就那么两个字。有人说不能这么叫。有人说必须这么叫。",
+    "variants": {
+      "programmer": {
+        "title": "这个接口到底叫什么",
+        "description": "有人要 getUser。有人要 queryAccount。注释区已经比代码长。"
+      },
+      "sales": {
+        "title": "方案封面那行字",
+        "description": "「赋能」还是「助力」。客户还没进门。"
+      },
+      "admin": {
+        "title": "流程名称要不要加「紧急」",
+        "description": "加了会跳过一档。不加今晚签不完。"
+      },
+      "finance": {
+        "title": "这一列叫收入还是回款",
+        "description": "差一个字，报表会翻脸。会议室里没人让。"
+      }
+    },
+    "options": [
+      {
+        "id": "A",
+        "text": "拿出依据，把名字定下来。",
+        "effects": { "ability": 6, "boss": 4, "hp": -8 }
+      },
+      {
+        "id": "B",
+        "text": "各让一步，写两个别名。",
+        "effects": { "mind": 4, "ability": 2, "hp": -4 }
+      },
+      {
+        "id": "C",
+        "text": "说按老板上次说的。",
+        "effects": { "boss": 2, "mind": -2 }
+      },
+      {
+        "id": "D",
+        "text": "看手机，让他们吵。",
+        "effects": { "slack": 8, "mind": 3, "boss": -4 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E94",
+    "type": "COLLEAGUE",
+    "weight": 11,
+    "careers": ["ALL"],
+    "title": "你的工位被堆满了纸箱",
+    "description": "显示器还在。键盘下面是一箱纸杯。便利贴写：临时放一下。",
+    "options": [
+      {
+        "id": "A",
+        "text": "自己搬走，腾出地方。",
+        "effects": { "hp": -8, "mind": -2, "ability": 1 }
+      },
+      {
+        "id": "B",
+        "text": "问是谁的，让他来拿。",
+        "effects": { "mind": 4, "hp": -2 }
+      },
+      {
+        "id": "C",
+        "text": "去空会议室办公。",
+        "effects": { "slack": 4, "mind": 4, "ability": 2 }
+      },
+      {
+        "id": "D",
+        "text": "把箱子推到过道，拍照。",
+        "effects": { "mind": 6, "slack": 3 },
+        "chancePercent": 25,
+        "chanceEffects": { "boss": -6 },
+        "chanceText": "行政说堵塞消防通道。你又推回去。"
+      }
+    ]
+  },
+  {
+    "id": "E95",
+    "type": "BOSS",
+    "weight": 12,
+    "once": true,
+    "careers": ["ALL"],
+    "title": "述职预演，点到你了",
+    "description": "「就当正式的。」激光笔在你空白页上停了三秒。",
+    "options": [
+      {
+        "id": "A",
+        "text": "现讲，把成绩和坑都摊开。",
+        "effects": { "ability": 8, "boss": 8, "hp": -10, "mind": -4 }
+      },
+      {
+        "id": "B",
+        "text": "说没准备，改下周。",
+        "effects": { "mind": 2, "boss": -8, "slack": 4 }
+      },
+      {
+        "id": "C",
+        "text": "套模板，数字往满了说。",
+        "effects": { "boss": 3, "ability": 1, "mind": -2 },
+        "chancePercent": 35,
+        "chanceEffects": { "boss": -10, "mind": -6 },
+        "chanceText": "有人问：这个数跟系统对不上。你卡了。"
+      },
+      {
+        "id": "D",
+        "text": "把话题踢给旁边那个人。",
+        "effects": { "slack": 6, "mind": 3, "boss": -6 },
+        "tags": ["slack"]
+      }
+    ]
+  },
+  {
+    "id": "E96",
+    "type": "COLLEAGUE",
+    "weight": 14,
+    "careers": ["ALL"],
+    "title": "有人把椅子滑到你工位",
+    "description": "「这个你熟。一起看一眼？」他的屏幕已经伸过来了。你的窗口还开着。",
+    "options": [
+      {
+        "id": "A",
+        "text": "一起做，把卡点拆开。",
+        "effects": { "ability": 5, "hp": -8, "mind": 4, "boss": 3 }
+      },
+      {
+        "id": "B",
+        "text": "口头讲，手不离开自己的键盘。",
+        "effects": { "ability": 3, "hp": -4, "mind": 2 }
+      },
+      {
+        "id": "C",
+        "text": "说你也卡着，让他先自己试。",
+        "effects": { "slack": 4, "mind": 2, "boss": -3 }
+      },
+      {
+        "id": "D",
+        "text": "「你怎么什么都来问。」顶回去。",
+        "effects": { "mind": 8, "boss": -4 },
+        "followUp": "E23",
+        "followUpChance": 70
+      }
+    ]
+  },
+  {
+    "id": "E97",
+    "type": "COLLEAGUE",
+    "weight": 13,
+    "careers": ["ALL"],
+    "title": "隔间探出一颗头",
+    "description": "「打断一下。」他手里捏着一张便利贴。你的进度条刚到 80%。",
+    "options": [
+      {
+        "id": "A",
+        "text": "停下来，把问题讲明白。",
+        "effects": { "ability": 4, "hp": -6, "mind": 3 }
+      },
+      {
+        "id": "B",
+        "text": "约五分钟后，先把手头存上。",
+        "effects": { "ability": 3, "hp": -3 }
+      },
+      {
+        "id": "C",
+        "text": "耳机不摘，比一个「等」。",
+        "effects": { "slack": 5, "mind": 2, "boss": -2 },
+        "tags": ["slack"]
+      },
+      {
+        "id": "D",
+        "text": "「你没长眼睛吗。」吵回去。",
+        "effects": { "mind": 6, "hp": -2 },
+        "followUp": "E23",
+        "followUpChance": 60
+      }
+    ]
+  },
+  {
+    "id": "E98",
+    "type": "COLLEAGUE",
+    "weight": 12,
+    "careers": ["ALL"],
+    "title": "他在你工位边上提高了音量",
+    "description": "「你上次说负责，结果呢？」隔壁工位有人摘了耳机。",
+    "options": [
+      {
+        "id": "A",
+        "text": "压低声音，把事实摆出来。",
+        "effects": { "ability": 4, "mind": 2, "hp": -4 }
+      },
+      {
+        "id": "B",
+        "text": "拉去茶水间，关上门吵。",
+        "effects": { "mind": 8, "boss": -6 },
+        "followUp": "E23"
+      },
+      {
+        "id": "C",
+        "text": "当众怼回去，一句不让。",
+        "effects": { "mind": 10, "boss": -8, "hp": -4 },
+        "followUp": "E99",
+        "followUpChance": 75
+      },
+      {
+        "id": "D",
+        "text": "站起来，先动手。",
+        "effects": { "mind": 6, "hp": -6, "boss": -6 },
+        "followUp": "E99"
+      }
+    ]
+  },
+  {
+    "id": "E99",
+    "type": "FIGHT",
+    "weight": 0,
+    "repeatable": true,
+    "fight": true,
+    "careers": ["ALL"],
+    "title": "工位过道打起来了",
+    "description": "椅子翻了。键盘掉到地上。有人在喊别打了。",
+    "options": []
+  }
+]

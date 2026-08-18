@@ -1,0 +1,62 @@
+[
+  {
+    "id": "programmer",
+    "name": "程序员",
+    "blurb": "Bug不会消失，它只会在你下班以后出现。",
+    "workApp": "IDEA",
+    "attrs": {
+      "salary": 9000,
+      "money": 20000,
+      "hp": 80,
+      "mind": 75,
+      "ability": 70,
+      "boss": 50,
+      "slack": 10
+    }
+  },
+  {
+    "id": "sales",
+    "name": "销售",
+    "blurb": "客户说考虑一下，通常意味着还没开始考虑。",
+    "workApp": "微信",
+    "attrs": {
+      "salary": 7000,
+      "money": 15000,
+      "hp": 90,
+      "mind": 70,
+      "ability": 60,
+      "boss": 55,
+      "slack": 5
+    }
+  },
+  {
+    "id": "admin",
+    "name": "行政",
+    "blurb": "公司所有人的事情，最后都会找到你。",
+    "workApp": "Excel",
+    "attrs": {
+      "salary": 6500,
+      "money": 18000,
+      "hp": 85,
+      "mind": 80,
+      "ability": 55,
+      "boss": 60,
+      "slack": 15
+    }
+  },
+  {
+    "id": "finance",
+    "name": "财务",
+    "blurb": "钱不是你赚的，但每一分钱都要经过你的手。",
+    "workApp": "Excel",
+    "attrs": {
+      "salary": 8000,
+      "money": 20000,
+      "hp": 80,
+      "mind": 75,
+      "ability": 70,
+      "boss": 55,
+      "slack": 5
+    }
+  }
+]

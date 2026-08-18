@@ -1,0 +1,15 @@
+{
+  "description": "打工人：活下去 V0.1",
+  "packOptions": { "ignore": [] },
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "minified": false
+  },
+  "compileType": "game",
+  "libVersion": "3.0.0",
+  "appid": "touristappid",
+  "projectname": "dagong-survive",
+  "condition": {}
+}
