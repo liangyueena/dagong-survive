@@ -12,6 +12,7 @@ import com.dagong.survive.common.GameConstants;
 import com.dagong.survive.config.GameProperties;
 import com.dagong.survive.domain.Attrs;
 import com.dagong.survive.domain.CareerDef;
+import com.dagong.survive.domain.ChatLine;
 import com.dagong.survive.domain.EndingDef;
 import com.dagong.survive.domain.EventDef;
 import com.dagong.survive.domain.GameData;
@@ -245,6 +246,57 @@ public class GameEngine {
         result.setFlavor(flavor);
         result.setNextEvent(currentEvent(state));
         return result;
+    }
+
+    public ChoiceResult startChat(GameState state, String herText) {
+        if (!GameConstants.STATUS_PLAYING.equals(state.getStatus())) {
+            throw new IllegalStateException("本局已经结束");
+        }
+        if (flag(state, GameConstants.FLAG_GIRLFRIEND) <= 0) {
+            state.getFlags().put(GameConstants.FLAG_GIRLFRIEND, Integer.valueOf(1));
+        }
+        addLine(state, "her", herText);
+        addFlag(state, "gfBond", 1);
+        Map<String, Integer> effects = new HashMap<String, Integer>();
+        effects.put("mind", Integer.valueOf(3));
+        Map<String, Integer> applied = state.getAttrs().apply(effects);
+        ChoiceResult result = new ChoiceResult();
+        result.setApplied(applied);
+        result.setFlavor(herText);
+        result.setSkipSettle(true);
+        result.setNextEvent(currentEvent(state));
+        return result;
+    }
+
+    public ChoiceResult chat(GameState state, String userText, String herText) {
+        if (!GameConstants.STATUS_PLAYING.equals(state.getStatus())) {
+            throw new IllegalStateException("本局已经结束");
+        }
+        if (flag(state, GameConstants.FLAG_GIRLFRIEND) <= 0) {
+            throw new IllegalStateException("你还没有在聊的人");
+        }
+        addLine(state, "me", userText);
+        addLine(state, "her", herText);
+        addFlag(state, "gfBond", 2);
+        Map<String, Integer> effects = new HashMap<String, Integer>();
+        effects.put("mind", Integer.valueOf(2));
+        if (flag(state, "atOffice") > 0) {
+            effects.put("slack", Integer.valueOf(4));
+        }
+        Map<String, Integer> applied = state.getAttrs().apply(effects);
+        ChoiceResult result = new ChoiceResult();
+        result.setApplied(applied);
+        result.setFlavor(herText);
+        result.setSkipSettle(true);
+        result.setNextEvent(currentEvent(state));
+        return result;
+    }
+
+    private void addLine(GameState state, String role, String text) {
+        state.getChat().add(new ChatLine(role, text));
+        while (state.getChat().size() > 16) {
+            state.getChat().remove(0);
+        }
     }
 
     public void revive(GameState state) {

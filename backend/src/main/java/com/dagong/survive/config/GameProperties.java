@@ -18,6 +18,9 @@ public class GameProperties {
     private int oilSlack = 80;
     private int oilMind = 80;
     private int oilBoss = 30;
+    private String qwenApiKey = "";
+    private String qwenModel = "qwen-turbo";
+    private String qwenUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
 
     public String getStore() {
         return store;
@@ -121,6 +124,30 @@ public class GameProperties {
 
     public void setOilBoss(int oilBoss) {
         this.oilBoss = oilBoss;
+    }
+
+    public String getQwenApiKey() {
+        return qwenApiKey;
+    }
+
+    public void setQwenApiKey(String qwenApiKey) {
+        this.qwenApiKey = qwenApiKey;
+    }
+
+    public String getQwenModel() {
+        return qwenModel;
+    }
+
+    public void setQwenModel(String qwenModel) {
+        this.qwenModel = qwenModel;
+    }
+
+    public String getQwenUrl() {
+        return qwenUrl;
+    }
+
+    public void setQwenUrl(String qwenUrl) {
+        this.qwenUrl = qwenUrl;
     }
 
     public boolean useRedis() {

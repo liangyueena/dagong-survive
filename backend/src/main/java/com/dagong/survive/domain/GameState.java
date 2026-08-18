@@ -26,6 +26,7 @@ public class GameState {
     private int rechooseUsed;
     private String queuedEventId;
     private GameSnapshot snapshot;
+    private List<ChatLine> chat = new ArrayList<ChatLine>();
 
     public GameSnapshot toSnapshot() {
         GameSnapshot snap = new GameSnapshot();
@@ -214,6 +215,17 @@ public class GameState {
 
     public void setSnapshot(GameSnapshot snapshot) {
         this.snapshot = snapshot;
+    }
+
+    public List<ChatLine> getChat() {
+        if (chat == null) {
+            chat = new ArrayList<ChatLine>();
+        }
+        return chat;
+    }
+
+    public void setChat(List<ChatLine> chat) {
+        this.chat = chat;
     }
 
     public static class GameSnapshot {

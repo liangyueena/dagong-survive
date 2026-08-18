@@ -274,6 +274,18 @@ public class GameEngineTest {
         assertNotEquals("E61", state.getCurrentEventId());
     }
 
+    @Test
+    public void deskChatStartsGirlfriend() {
+        GameState state = engine.start("u1", "programmer");
+        engine.startChat(state, "你是刚下班吗？");
+        assertEquals(Integer.valueOf(1), state.getFlags().get("girlfriend"));
+        assertEquals(1, state.getChat().size());
+        int mind = state.getAttrs().getMind();
+        engine.chat(state, "在工位偷发", "少摸鱼。");
+        assertEquals(3, state.getChat().size());
+        assertTrue(state.getAttrs().getMind() >= mind);
+    }
+
     private String firstOpenOption(GameState state, EventDef event) {
         String id = event.getId();
         if ("E27".equals(id) || "E28".equals(id) || "E29".equals(id) || "E42".equals(id)) {

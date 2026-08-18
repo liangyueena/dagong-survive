@@ -185,6 +185,18 @@
     }
     .dock button.on { border-color: var(--accent); color: var(--accent); }
     .dock button small { display: block; font-size: 9px; color: var(--muted); }
+    .chat-log {
+      max-height: 38vh; overflow: auto; margin: 8px 0 10px; padding-right: 4px;
+    }
+    .chat-line { margin: 0 0 8px; max-width: 86%; }
+    .chat-line.me { margin-left: auto; }
+    .chat-line .bubble-txt {
+      display: inline-block; padding: 8px 10px; border-radius: 10px; font-size: 15px; line-height: 1.4;
+    }
+    .chat-line.her .bubble-txt { background: #243044; color: var(--text); }
+    .chat-line.me .bubble-txt { background: #3d5344; color: #e8f0e6; }
+    .chat-send { display: flex; gap: 8px; }
+    .chat-send input { flex: 1; margin: 0; }
     .asset-stage { position: absolute; inset: 12% 6% 28%; z-index: 5; }
     .car-body {
       position: absolute; left: 12%; right: 12%; bottom: 22%; height: 38%;
@@ -291,16 +303,26 @@
     .letterbox { position: absolute; left: 0; right: 0; height: 6%; background: #050608; z-index: 12; pointer-events: none; }
     .letterbox.top { top: 0; }
     .letterbox.bot { display: none; }
-    .fp.talk .lids, .fp.talk .bezel, .fp.talk .kb, .fp.talk .mouse, .fp.talk .mug, .fp.talk .pin, .fp.talk .phone-fp { display: none; }
+    .fp.talk .bezel, .fp.talk .kb, .fp.talk .mouse, .fp.talk .mug, .fp.talk .pin, .fp.talk .phone-fp { display: none; }
     .fp.talk .desk { height: 22%; clip-path: polygon(0 100%, 0 55%, 50% 35%, 100% 55%, 100% 100%); opacity: .9; }
-    .fp.talk .arm { height: 14%; opacity: .75; }
+    .fp.talk .arm { height: 22%; opacity: 1; z-index: 12; }
     .fp.talk .hud { top: 7%; z-index: 13; }
-    .talk-stage { position: absolute; inset: 10% 0 52%; z-index: 4; }
+    .fp.talk .vignette {
+      background: radial-gradient(ellipse at 50% 38%, transparent 36%, rgba(0,0,0,.62) 100%);
+    }
+    .talk-stage { position: absolute; inset: 6% 0 46%; z-index: 4; }
     .person {
-      position: absolute; left: 50%; bottom: 0; width: 130px; height: 180px; margin-left: -65px;
+      position: absolute; left: 50%; bottom: -8%; width: 168px; height: 230px; margin-left: -84px;
       transform-origin: 50% 100%; animation: talkBob 2.4s ease-in-out infinite;
     }
-    .fp.lean .person { left: 58%; margin-left: 0; }
+    .fp.lean .person { left: 56%; margin-left: 0; }
+    .fp.talk.in-face .person {
+      width: 210px; height: 280px; margin-left: -105px; bottom: -18%; left: 50%;
+      animation: inFace 0.7s ease-in-out infinite;
+    }
+    .fp.talk.in-face .arm.l { transform: rotate(26deg) translate(8px, -18px); }
+    .fp.talk.in-face .arm.r { transform: rotate(-22deg) translate(-6px, -10px); }
+    .fp.talk.in-face .arm.l .hand, .fp.talk.in-face .arm.r .hand { animation: fistUp .4s ease-in-out infinite; }
     .fp.call .person { width: 120px; height: 160px; bottom: auto; top: 8%; margin-left: -60px; }
     .fp.phone .person { width: 100px; height: 130px; top: 12%; bottom: auto; }
     .p-hair { position: absolute; left: 38px; top: 8px; width: 84px; height: 44px; background: #2a241c; border-radius: 40px 40px 8px 8px; z-index: 2; }
@@ -331,6 +353,105 @@
     .person.recruiter .p-mouth { background: #c66; height: 8px; }
     .person.wife .p-hair { background: #1a1210; height: 58px; left: 32px; width: 96px; border-radius: 40px 40px 12px 18px; }
     .person.wife .p-body { background: #8a4a5a; }
+    .person.you .p-hair { background: #3a2818; height: 40px; }
+    .person.you .p-body { background: #3d5344; }
+    .p-eye i {
+      display: block; width: 3px; height: 3px; background: #f2efe8; border-radius: 50%;
+      position: absolute; left: 1px; top: 1px;
+    }
+    .p-lid {
+      position: absolute; top: 32px; width: 10px; height: 0; background: #e4c2a0; border-radius: 0;
+      animation: blink 3.2s ease infinite; z-index: 2;
+    }
+    .p-lid.l { left: 15px; } .p-lid.r { right: 15px; }
+    .p-blush {
+      display: none; position: absolute; top: 46px; width: 10px; height: 6px;
+      background: rgba(210, 90, 90, .35); border-radius: 50%;
+    }
+    .p-blush.l { left: 8px; } .p-blush.r { right: 8px; }
+    .p-vein, .p-sweat, .p-spit, .p-tooth, .p-hand { display: none; }
+    .p-vein {
+      position: absolute; left: 6px; top: 10px; width: 10px; height: 10px; z-index: 3;
+      border-left: 2px solid #c44; border-bottom: 2px solid #c44; transform: rotate(18deg);
+    }
+    .p-sweat {
+      position: absolute; right: 4px; top: 8px; width: 6px; height: 10px; background: #9ad;
+      border-radius: 40% 40% 50% 50%; z-index: 3; animation: sweatDrop .8s ease-in infinite;
+    }
+    .p-spit {
+      position: absolute; right: -10px; bottom: 16px; width: 18px; height: 8px; z-index: 4;
+    }
+    .p-spit::before, .p-spit::after {
+      content: ""; position: absolute; width: 5px; height: 5px; background: #eee; border-radius: 50%;
+      animation: spit 0.35s ease-out infinite;
+    }
+    .p-spit::after { left: 8px; top: 3px; animation-delay: .12s; }
+    .p-tooth {
+      position: absolute; left: 3px; top: 1px; width: 10px; height: 3px; background: #f4f0e6; border-radius: 1px;
+    }
+    .p-hand {
+      position: absolute; right: -8px; top: 118px; width: 22px; height: 22px;
+      background: #e4c2a0; border-radius: 50%; z-index: 3;
+    }
+    .person.speaking .p-mouth { animation: speak .22s ease-in-out infinite; }
+    .person.mood-smile .p-mouth {
+      width: 22px; left: 21px; height: 8px; border-radius: 0 0 14px 14px; background: #a45; animation: none;
+    }
+    .person.mood-smile .p-brow.l { transform: rotate(-16deg); top: 22px; }
+    .person.mood-smile .p-brow.r { transform: rotate(16deg); top: 22px; }
+    .person.mood-smile .p-blush { display: block; }
+    .person.mood-angry .p-brow.l { top: 22px; transform: rotate(22deg); height: 4px; }
+    .person.mood-angry .p-brow.r { top: 22px; transform: rotate(-22deg); height: 4px; }
+    .person.mood-angry .p-mouth {
+      width: 20px; height: 12px; left: 22px; bottom: 10px; border-radius: 4px 4px 10px 10px; background: #7a2030;
+    }
+    .person.mood-angry .p-tooth { display: block; }
+    .person.mood-angry .p-vein { display: block; animation: veinPop .4s ease-in-out infinite; }
+    .person.mood-angry .p-eye { height: 6px; border-radius: 2px; }
+    .person.mood-roast .p-brow.l { transform: rotate(-18deg); top: 20px; }
+    .person.mood-roast .p-brow.r { transform: rotate(4deg); top: 26px; }
+    .person.mood-roast .p-mouth {
+      width: 18px; height: 6px; left: 28px; border-radius: 0 12px 0 12px; transform: rotate(-12deg); background: #a45;
+    }
+    .person.mood-roast.speaking .p-spit { display: block; }
+    .person.mood-argue { animation: argueLunge .55s ease-in-out infinite; }
+    .person.mood-argue .p-brow.l { top: 20px; transform: rotate(24deg); height: 4px; }
+    .person.mood-argue .p-brow.r { top: 20px; transform: rotate(-24deg); height: 4px; }
+    .person.mood-argue .p-mouth {
+      width: 24px; height: 16px; left: 20px; bottom: 8px; border-radius: 6px; background: #6a1828;
+    }
+    .person.mood-argue .p-tooth { display: block; }
+    .person.mood-argue .p-sweat { display: block; }
+    .person.mood-argue .p-vein { display: block; }
+    .person.mood-argue.speaking .p-spit { display: block; }
+    .person.mood-argue .p-hand { display: block; animation: jabPoint .55s ease-in-out infinite; }
+    .person.mood-sad .p-brow.l { transform: rotate(16deg); top: 26px; }
+    .person.mood-sad .p-brow.r { transform: rotate(-16deg); top: 26px; }
+    .person.mood-sad .p-mouth {
+      width: 16px; height: 7px; border-radius: 10px 10px 0 0; bottom: 18px; animation: none; background: #a45;
+    }
+    .person.mood-sad .p-eye { height: 5px; }
+    .person.mood-shock .p-eye { width: 11px; height: 11px; top: 30px; }
+    .person.mood-shock .p-mouth {
+      width: 12px; height: 12px; left: 26px; bottom: 12px; border-radius: 50%; animation: none; background: #7a3040;
+    }
+    .person.mood-shock .p-brow { top: 18px; }
+    .banter {
+      position: absolute; inset: 0; pointer-events: none; z-index: 5;
+    }
+    .banter span {
+      position: absolute; font-size: 14px; font-weight: 700;
+      text-shadow: 0 1px 0 #000, 0 0 8px rgba(0,0,0,.6);
+      opacity: 0; white-space: nowrap;
+      animation: roastPop 1.8s ease-out infinite;
+    }
+    .banter span.them { color: #f3d27a; right: 8%; top: 10%; }
+    .banter span.them:nth-child(2) { right: 14%; top: 28%; animation-delay: .45s; }
+    .banter span.me { color: #cfe8c8; left: 8%; bottom: 6%; top: auto; animation-delay: .25s; }
+    .banter span.me:nth-child(4) { left: 18%; bottom: 18%; animation-delay: .8s; }
+    .inner-voice {
+      margin-top: 8px; font-size: 13px; color: #9aa7b0; font-style: italic; line-height: 1.4;
+    }
     .video-frame {
       display: none; position: absolute; left: 50%; top: 6%; width: 200px; height: 210px; margin-left: -100px;
       background: #111; border: 4px solid #2a3140; border-radius: 12px; overflow: hidden;
@@ -446,13 +567,33 @@
     @keyframes panicCam { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-2px, 1px); } }
     @keyframes shake { 0%,100% { transform: none; } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
     @keyframes pulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.2); } }
-    @keyframes talkBob { 0%,100% { transform: translateY(0) scale(0.86); } 50% { transform: translateY(4px) scale(0.86); } }
+    @keyframes talkBob { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(5px) scale(1); } }
+    @keyframes inFace { 0%,100% { transform: translateY(0) scale(1.05); } 50% { transform: translateY(6px) scale(1.08); } }
+    @keyframes fistUp { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    @keyframes speak {
+      0%,100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.35); }
+    }
+    @keyframes sweatDrop { 0% { transform: translateY(0); opacity: .9; } 100% { transform: translateY(10px); opacity: .2; } }
+    @keyframes spit { 0% { transform: translate(0,0) scale(1); opacity: .9; } 100% { transform: translate(10px,-6px) scale(.3); opacity: 0; } }
+    @keyframes veinPop { 0%,100% { transform: rotate(18deg) scale(1); } 50% { transform: rotate(18deg) scale(1.2); } }
+    @keyframes jabPoint { 0%,100% { transform: translate(0,0); } 50% { transform: translate(8px,-4px); } }
+    @keyframes argueLunge { 0%,100% { transform: translateY(0) scale(0.86); } 50% { transform: translateY(3px) scale(0.9); } }
+    @keyframes youLunge { 0%,100% { transform: translateX(0) scale(0.86); } 50% { transform: translateX(10px) scale(0.9); } }
+    @keyframes foeLunge { 0%,100% { transform: scaleX(-1) translateX(0) scale(0.86); } 50% { transform: scaleX(-1) translateX(10px) scale(0.9); } }
+    @keyframes roastPop {
+      0% { opacity: 0; transform: translateY(8px) scale(.8); }
+      20% { opacity: 1; transform: translateY(0) scale(1); }
+      70% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-18px) scale(.9); }
+    }
     @keyframes feed { 0%,100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(8px); opacity: .6; } }
     .fp.fight { animation: fightPulse 1.2s ease-in-out infinite; }
     .fp.fight.hit { animation: fightShake .18s linear; }
     .fp.fight .lamp { box-shadow: 0 0 80px 24px rgba(180, 40, 30, .28); }
     .fp.fight .desk { height: 18%; }
     .fp.fight .talk-stage { display: none; }
+    .fp.fight .arm { display: none; }
     .fight-flash {
       position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 11; pointer-events: none;
     }
@@ -470,10 +611,47 @@
     .fighter {
       position: absolute; bottom: 8%; width: 140px; height: 200px;
     }
-    .fighter.you { left: 8%; }
-    .fighter.foe { right: 8%; }
+    .fp.fight .fighter.you { display: none; }
+    .fp.fight .fighter.foe {
+      left: 50%; right: auto; margin-left: -100px; width: 200px; height: 260px; bottom: 6%;
+    }
+    .fp.fight .fighter.foe .person {
+      transform: none; left: 20px; width: 168px; height: 230px; animation: inFace .7s ease-in-out infinite;
+    }
+    .fp-fist {
+      position: absolute; bottom: 2%; width: 78px; height: 72px; z-index: 12;
+      background: #e2b48a; border-radius: 46% 40% 50% 44%;
+      box-shadow: 0 10px 18px rgba(0,0,0,.45), inset 0 -8px 0 rgba(0,0,0,.12);
+    }
+    .fp-fist.l { left: 6%; transform: rotate(16deg); }
+    .fp-fist.r { right: 6%; transform: rotate(-16deg); }
+    .fp-fist.l.punch { animation: fpJabL .16s ease; }
+    .fp-fist.r.punch { animation: fpJabR .16s ease; }
+    .fp-fist.flinch { animation: fpFlinch .2s ease; }
+    @keyframes fpJabL {
+      0% { transform: rotate(16deg) translate(0,0); }
+      50% { transform: rotate(8deg) translate(48px, -90px) scale(1.15); }
+      100% { transform: rotate(16deg) translate(0,0); }
+    }
+    @keyframes fpJabR {
+      0% { transform: rotate(-16deg) translate(0,0); }
+      50% { transform: rotate(-8deg) translate(-48px, -90px) scale(1.15); }
+      100% { transform: rotate(-16deg) translate(0,0); }
+    }
+    @keyframes fpFlinch {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(16px) scale(.92); }
+    }
+    @keyframes hitYou {
+      0% { transform: none; }
+      50% { transform: scale(1.18) translateY(16px); }
+      100% { transform: none; }
+    }
     .fighter .person { animation: none; left: 10px; margin: 0; bottom: 18px; }
     .fighter.foe .person { transform: scaleX(-1); }
+    .fp.fight .fighter.foe .person { transform: none; animation: inFace .7s ease-in-out infinite; }
+    .fp.fight .fighter.foe.punch-r { animation: hitYou .18s ease; }
+    .fp.fight .fighter.foe.shake { animation: boom .22s ease; }
     .fighter.punch-l { animation: hitL .16s ease; }
     .fighter.punch-r { animation: hitR .16s ease; }
     .fighter.shake { animation: boom .22s ease; }
@@ -700,6 +878,7 @@
       if (f.house) bits.push("有房");
       if (f.car) bits.push("有车");
       if (f.married) bits.push("已婚");
+      if (f.girlfriend && !f.married) bits.push("恋爱中");
       if (f.stocks) bits.push("持股" + f.stocks);
       return bits.length ? "<div class='badges'>" + bits.join(" · ") + "</div>" : "";
     }
@@ -730,12 +909,78 @@
     }
     function dock() {
       if (!state.game) return "";
-      if (["home", "career", "ending", "rank", "book", "settings", "fight", "asset"].indexOf(state.scene) >= 0) return "";
+      if (["home", "career", "ending", "rank", "book", "settings", "fight", "asset", "chat"].indexOf(state.scene) >= 0) return "";
+      const herOn = !!(flags().girlfriend || flags().married);
+      const herLabel = flags().married ? "已婚" : (flags().girlfriend ? "在聊" : "找对象");
       return "<div class='dock'>" +
         "<button class='" + (owned("car") ? "on" : "") + "' onclick='openAsset(\"car\")'>车<small>" + (owned("car") ? "已买" : "看看") + "</small></button>" +
         "<button class='" + (owned("house") ? "on" : "") + "' onclick='openAsset(\"house\")'>房<small>" + (owned("house") ? "已买" : "看看") + "</small></button>" +
-        "<button class='" + (owned("wife") ? "on" : "") + "' onclick='openAsset(\"wife\")'>她<small>" + (owned("wife") ? "已婚" : "看看") + "</small></button>" +
+        "<button class='" + (herOn ? "on" : "") + "' onclick='openChat()'>" +
+        "她<small>" + herLabel + "</small></button>" +
         "</div>";
+    }
+    function openChat() {
+      if (state.scene !== "chat") state.backScene = state.scene;
+      go("chat");
+    }
+    function esc(s) {
+      return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    function chatLogHtml() {
+      const lines = (state.game && state.game.chat) || [];
+      if (!lines.length) return "<div class='muted'>工位上打开相亲页。滑一下，看谁回你。</div>";
+      return "<div class='chat-log' id='chatLog'>" + lines.map(function (l) {
+        const who = l.role === "me" ? "me" : "her";
+        return "<div class='chat-line " + who + "'><div class='bubble-txt'>" + esc(l.text) + "</div></div>";
+      }).join("") + "</div>";
+    }
+    function chat() {
+      const g = state.game || {};
+      const has = !!(flags().girlfriend || flags().married);
+      const busy = state.chatBusy ? " disabled" : "";
+      return shell(
+        "<button class='back' onclick='go(state.backScene || \"play\")'>← 扣上手机</button>" +
+        "<div class='tag'>微信 · 工位</div>" +
+        "<div class='msg'><div class='title' style='font-size:18px;margin:0 0 6px'>" + (has ? "她" : "找对象") + "</div>" +
+        "<div class='muted'>" + (has ? "趁群里没人，先回一句。" : "上班也能滑。别让老板看见屏幕。") + "</div></div>" +
+        chatLogHtml() +
+        (has
+          ? "<div class='chat-send'><input id='chatText' maxlength='80' placeholder='说点什么' onkeydown='if(event.key===\"Enter\")sendChat()' />" +
+            "<button class='btn' style='margin:0;width:auto;padding:10px 14px' onclick='sendChat()'" + busy + ">发</button></div>"
+          : "<button class='btn' onclick='matchHer()'" + busy + ">滑一个，开始聊</button>") +
+        (g.flavor && has ? "<div class='muted' style='margin-top:8px'>" + esc(g.flavor) + "</div>" : "")
+      );
+    }
+    async function matchHer() {
+      if (state.chatBusy) return;
+      state.chatBusy = true;
+      try {
+        state.game = await req("/api/game/" + state.game.gameId + "/chat", "POST", { match: true });
+      } catch (e) {
+        state.toast = e.message || "没滑到人";
+      }
+      state.chatBusy = false;
+      go("chat");
+      scrollChat();
+    }
+    async function sendChat() {
+      if (state.chatBusy) return;
+      const input = document.getElementById("chatText");
+      const text = input ? input.value.trim() : "";
+      if (!text) return;
+      state.chatBusy = true;
+      try {
+        state.game = await req("/api/game/" + state.game.gameId + "/chat", "POST", { text: text });
+      } catch (e) {
+        state.toast = e.message || "没发出去";
+      }
+      state.chatBusy = false;
+      go("chat");
+      scrollChat();
+    }
+    function scrollChat() {
+      const log = document.getElementById("chatLog");
+      if (log) log.scrollTop = log.scrollHeight;
     }
     function openAsset(kind) {
       if (state.game) state.game.flavor = null;
@@ -843,52 +1088,117 @@
       "</div>";
     }
 
+    function talkMood(e) {
+      if (!e) return "talk";
+      if (e.id === "E23" || e.id === "E98" || e.id === "E96" || e.id === "E97" || e.id === "E06") return "argue";
+      if (e.type === "BOSS" || e.id === "E21" || e.id === "E25") return "angry";
+      if (e.type === "COLLEAGUE" || e.id === "E04" || e.id === "E14") return "roast";
+      if (e.id === "E45") return "smile";
+      if (e.id === "E17") return "sad";
+      if (e.id === "E49" || e.id === "E50" || e.id === "E52") return "shock";
+      return "talk";
+    }
+    function innerVoice(mood) {
+      if (mood === "argue") return "你心里：别先怂。血往脸上涌。";
+      if (mood === "roast") return "你心里：这句话我接了。";
+      if (mood === "angry") return "你心里：先把呼吸放慢。";
+      if (mood === "sad") return "你心里：先把这通电话听完。";
+      if (mood === "shock") return "你心里：工牌还在脖子上。";
+      if (mood === "smile") return "你心里：别笑太明显。";
+      return "你坐在这儿。这是你的工位。";
+    }
+    function banterHtml(mood) {
+      if (mood === "argue") {
+        return "<span class='them'>你什么意思？</span><span class='them'>这也能拖？</span>" +
+          "<span class='me'>你先说清楚</span><span class='me'>别指着我</span>";
+      }
+      return "<span class='them'>笑死</span><span class='them'>懂王</span>" +
+        "<span class='me'>你行你上啊</span><span class='me'>少来</span>";
+    }
     function personHtml(sp) {
-      return "<div class='person " + sp.role + "'>" +
+      const mood = sp.mood || "talk";
+      const who = sp.who ? " " + sp.who : "";
+      const speaking = sp.speaking ? " speaking" : "";
+      return "<div class='person " + (sp.role || "") + " mood-" + mood + who + speaking + "'>" +
         "<div class='p-hair'></div><div class='p-head'>" +
         "<div class='p-brow l'></div><div class='p-brow r'></div>" +
-        "<div class='p-glasses'></div><div class='p-eye l'></div><div class='p-eye r'></div>" +
-        "<div class='p-mouth'></div></div><div class='p-neck'></div><div class='p-body'></div></div>";
+        "<div class='p-vein'></div><div class='p-sweat'></div>" +
+        "<div class='p-glasses'></div>" +
+        "<div class='p-eye l'><i></i></div><div class='p-eye r'><i></i></div>" +
+        "<div class='p-lid l'></div><div class='p-lid r'></div>" +
+        "<div class='p-blush l'></div><div class='p-blush r'></div>" +
+        "<div class='p-mouth'><span class='p-tooth'></span></div>" +
+        "<div class='p-spit'></div></div>" +
+        "<div class='p-neck'></div><div class='p-body'></div><div class='p-hand'></div></div>";
     }
 
     function talkShell(sp, choicesHtml, extra) {
       const shot = sp.shot === "call" ? "call" : (sp.shot === "lean" ? "lean" : (sp.shot === "phone" ? "phone" : "overdesk"));
+      const e = state.game && state.game.event;
+      const mood = talkMood(e);
+      const close = mood === "argue" || mood === "angry";
+      const heat = mood === "argue" || mood === "roast";
       state.talkLine = sp.line || "";
-      return "<div class='fp talk " + shot + "'>" +
+      let inner;
+      if (shot === "call") {
+        inner = "<div class='video-frame'>" + personHtml({ role: sp.role, mood: mood, speaking: true }) +
+          "<div class='call-tag'>视频通话 · " + sp.name + "</div></div>";
+      } else {
+        inner = personHtml({ role: sp.role, mood: mood, speaking: true }) +
+          (heat ? "<div class='banter'>" + banterHtml(mood) + "</div>" : "");
+      }
+      return "<div class='fp talk " + shot + (close ? " in-face" : "") + "'>" +
         "<div class='letterbox top'></div><div class='letterbox bot'></div>" +
-        "<div class='grain'></div><div class='vignette'></div>" +
+        "<div class='grain'></div><div class='vignette'></div><div class='lids'></div>" +
         "<div class='fp-cam' id='cam'><div class='fp-breathe'>" +
           "<div class='ceiling'></div><div class='lamp'></div>" +
           "<div class='wall-l'></div><div class='wall-r'></div>" +
           "<div class='window'><div class='city'></div></div>" +
           "<div class='desk'></div>" +
-          "<div class='talk-stage'>" +
-            (shot === "call" ? "<div class='video-frame'>" + personHtml(sp) + "<div class='call-tag'>视频通话 · " + sp.name + "</div></div>" : personHtml(sp)) +
-          "</div>" +
-          "<div class='arm l'><div class='hand'></div></div>" +
-          "<div class='arm r'><div class='hand'></div></div>" +
+          "<div class='talk-stage'>" + inner + "</div>" +
+          "<div class='arm l'><div class='hand'><span class='finger' style='left:8px'></span><span class='finger' style='left:20px'></span><span class='finger' style='left:32px'></span></div></div>" +
+          "<div class='arm r'><div class='hand'><span class='finger' style='left:8px'></span><span class='finger' style='left:20px'></span><span class='finger' style='left:32px'></span></div></div>" +
         "</div></div>" +
         hud() +
         "<div class='talk-ui'>" +
           "<div class='bubble'><div class='who'>" + sp.name + "</div>" +
-          "<div class='spoken' id='spoken'>" + (sp.line || "") + "</div>" +
-          "<div class='scene-cap'>" + (sp.cap || "") + "</div></div>" +
+          "<div class='spoken' id='spoken' onclick='skipLine()'></div>" +
+          "<div class='scene-cap'>" + (sp.cap || "") + "</div>" +
+          "<div class='inner-voice'>" + innerVoice(mood) + "</div></div>" +
           "<div class='talk-choices' id='talkChoices'>" + (extra || "") + choicesHtml + "</div>" +
         "</div>" +
       "</div>";
     }
 
+    function skipLine() {
+      if (state.typeIv) { clearInterval(state.typeIv); state.typeIv = null; }
+      const el = document.getElementById("spoken");
+      if (el) el.textContent = state.talkLine || el.textContent;
+      finishLine();
+    }
+    function finishLine() {
+      const box = document.getElementById("talkChoices");
+      if (box) box.className = "talk-choices show";
+      const mouths = document.querySelectorAll(".person.speaking");
+      for (let i = 0; i < mouths.length; i++) mouths[i].classList.remove("speaking");
+    }
     function typeLine() {
       const el = document.getElementById("spoken");
-      const box = document.getElementById("talkChoices");
       if (!el) return;
-      const text = state.talkLine || el.textContent || "";
-      el.textContent = text;
-      if (box) box.className = "talk-choices show";
-      const mouth = document.querySelector(".p-mouth");
-      if (mouth) {
-        setTimeout(function () { mouth.style.animation = "none"; }, 900);
-      }
+      const text = state.talkLine || "";
+      if (state.typeIv) { clearInterval(state.typeIv); state.typeIv = null; }
+      el.textContent = "";
+      if (!text) return finishLine();
+      let i = 0;
+      state.typeIv = setInterval(function () {
+        i++;
+        el.textContent = text.slice(0, i);
+        if (i >= text.length) {
+          clearInterval(state.typeIv);
+          state.typeIv = null;
+          finishLine();
+        }
+      }, 38);
     }
 
     function bindCam() {
@@ -948,6 +1258,7 @@
       if (state.bossIv) { clearInterval(state.bossIv); state.bossIv = null; }
       if (state.patrolWait) { clearTimeout(state.patrolWait); state.patrolWait = null; }
       if (state.patrolIv) { clearInterval(state.patrolIv); state.patrolIv = null; }
+      if (state.typeIv) { clearInterval(state.typeIv); state.typeIv = null; }
     }
     function switchWindow(ok, full) {
       if (state.patrolLock) return;
@@ -1192,14 +1503,14 @@
           "<div class='wall-l'></div><div class='wall-r'></div>" +
           "<div class='window'><div class='city'></div></div><div class='desk'></div>" +
           "<div class='arena' onclick='punchFight()'>" +
-            "<div class='hp-row'><div class='hp you'><i id='hpYou'></i></div><div class='vs'>VS</div><div class='hp foe'><i id='hpFoe'></i></div></div>" +
-            "<div class='fighter you' id='youF'>" + personHtml({ role: "" }) + "<div class='fist'></div><div class='fname'>你</div></div>" +
-            "<div class='fighter foe' id='foeF'>" + personHtml(foe) + "<div class='fist'></div><div class='fname'>" + foe.name + "</div></div>" +
+            "<div class='hp-row'><div class='hp you'><i id='hpYou'></i></div><div class='vs'>你</div><div class='hp foe'><i id='hpFoe'></i></div></div>" +
+            "<div class='fighter foe' id='foeF'>" + personHtml({ role: foe.role, mood: "angry", speaking: true }) + "<div class='fname'>" + foe.name + "</div></div>" +
+            "<div class='fp-fist l' id='youF'></div><div class='fp-fist r' id='youR'></div>" +
             "<div class='cup'></div>" +
             "<div class='fx' id='fx'>砰</div>" +
           "</div></div></div>" + hud() +
         "<div class='fight-ui'><div class='timer-bar'><i></i></div>" +
-        "<div class='fight-meta' id='fightMeta'>" + place + " · 对上 " + foe.name + " · 连点出拳</div>" +
+        "<div class='fight-meta' id='fightMeta'>" + place + " · " + foe.name + "就在眼前 · 连点出拳</div>" +
         "<button class='punch-btn' onclick='event.stopPropagation(); punchFight()'>出拳</button></div></div>";
     }
     function setHp() {
@@ -1210,16 +1521,19 @@
     }
     function hitFx(text, youHit) {
       const you = document.getElementById("youF");
+      const youR = document.getElementById("youR");
       const foe = document.getElementById("foeF");
       const fx = document.getElementById("fx");
       const flash = document.getElementById("flash");
       const fp = document.querySelector(".fp.fight");
       if (youHit) {
-        if (you) { you.className = "fighter you punch-l"; setTimeout(function () { if (!state.fightLock) you.className = "fighter you"; }, 160); }
+        if (you) { you.className = "fp-fist l punch"; setTimeout(function () { if (!state.fightLock) you.className = "fp-fist l"; }, 160); }
+        if (youR) { youR.className = "fp-fist r punch"; setTimeout(function () { if (!state.fightLock) youR.className = "fp-fist r"; }, 160); }
         if (foe) { foe.className = "fighter foe shake"; setTimeout(function () { if (!state.fightLock) foe.className = "fighter foe"; }, 200); }
       } else {
-        if (foe) { foe.className = "fighter foe punch-r"; setTimeout(function () { if (!state.fightLock) foe.className = "fighter foe"; }, 160); }
-        if (you) { you.className = "fighter you shake"; setTimeout(function () { if (!state.fightLock) you.className = "fighter you"; }, 200); }
+        if (foe) { foe.className = "fighter foe punch-r"; setTimeout(function () { if (!state.fightLock) foe.className = "fighter foe"; }, 180); }
+        if (you) { you.className = "fp-fist l flinch"; setTimeout(function () { if (!state.fightLock) you.className = "fp-fist l"; }, 200); }
+        if (youR) { youR.className = "fp-fist r flinch"; setTimeout(function () { if (!state.fightLock) youR.className = "fp-fist r"; }, 200); }
       }
       if (fx) {
         fx.textContent = text;
@@ -1333,6 +1647,7 @@
         else if (state.scene === "boss") app.innerHTML = boss();
         else if (state.scene === "fight") app.innerHTML = fight();
         else if (state.scene === "asset") app.innerHTML = asset();
+        else if (state.scene === "chat") app.innerHTML = chat();
         else if (state.scene === "ending") app.innerHTML = ending();
         else if (state.scene === "rank") app.innerHTML = await rank();
         else if (state.scene === "book") app.innerHTML = await book();
@@ -1342,6 +1657,7 @@
         if (state.scene === "fight") startFightClock();
         if (state.scene === "boss") startBossClock();
         if (state.scene === "play") startPatrol();
+        if (state.scene === "chat") scrollChat();
         const dockHtml = dock();
         if (dockHtml) app.insertAdjacentHTML("beforeend", dockHtml);
         if (state.toast) {

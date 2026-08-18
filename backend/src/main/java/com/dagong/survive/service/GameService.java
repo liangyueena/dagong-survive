@@ -44,9 +44,11 @@ public class GameService {
     private final TrackLogRepo trackLogRepo;
     private final AdLogRepo adLogRepo;
     private final ObjectMapper objectMapper;
+    private final QwenClient qwenClient;
 
     public GameService(GameEngine engine, GameData data, GameStateStore store, GameRecordRepo gameRecordRepo,
-            GameEventLogRepo eventLogRepo, TrackLogRepo trackLogRepo, AdLogRepo adLogRepo, ObjectMapper objectMapper) {
+            GameEventLogRepo eventLogRepo, TrackLogRepo trackLogRepo, AdLogRepo adLogRepo, ObjectMapper objectMapper,
+            QwenClient qwenClient) {
         this.engine = engine;
         this.data = data;
         this.store = store;
@@ -55,6 +57,7 @@ public class GameService {
         this.trackLogRepo = trackLogRepo;
         this.adLogRepo = adLogRepo;
         this.objectMapper = objectMapper;
+        this.qwenClient = qwenClient;
     }
 
     @Transactional
@@ -126,6 +129,29 @@ public class GameService {
     public Map<String, Object> patrol(String userId, String gameId, boolean success) {
         GameState state = require(userId, gameId);
         ChoiceResult result = engine.patrol(state, success);
+        persist(state);
+        Map<String, Object> view = view(state, result.getApplied(), result.getFlavor(), null, null);
+        view.put("skipSettle", Boolean.TRUE);
+        return view;
+    }
+
+    @Transactional
+    public Map<String, Object> chat(String userId, String gameId, String text, boolean match) {
+        GameState state = require(userId, gameId);
+        CareerDef career = data.career(state.getCareerId());
+        String careerName = career == null ? "打工人" : career.getName();
+        ChoiceResult result;
+        if (match || state.getFlags().get(GameConstants.FLAG_GIRLFRIEND) == null
+                || state.getFlags().get(GameConstants.FLAG_GIRLFRIEND).intValue() <= 0) {
+            String her = qwenClient.match(careerName);
+            result = engine.startChat(state, her);
+        } else {
+            if (!StringUtils.hasText(text)) {
+                throw new IllegalArgumentException("先写一句再发");
+            }
+            String her = qwenClient.reply(careerName, state.getChat(), text);
+            result = engine.chat(state, text, her);
+        }
         persist(state);
         Map<String, Object> view = view(state, result.getApplied(), result.getFlavor(), null, null);
         view.put("skipSettle", Boolean.TRUE);
@@ -278,6 +304,7 @@ public class GameService {
         view.put("ending", ending == null ? null : toEndingView(state, ending, career));
         view.put("lastOptionId", state.getLastOptionId());
         view.put("flags", state.getFlags());
+        view.put("chat", state.getChat());
         view.put("canRevive", GameConstants.ENDING_FIRED.equals(state.getEndingId()));
         view.put("canRechoose", state.getSnapshot() != null && GameConstants.STATUS_PLAYING.equals(state.getStatus()));
         return view;

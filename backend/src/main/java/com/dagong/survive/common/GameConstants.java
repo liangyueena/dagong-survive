@@ -25,6 +25,7 @@ public final class GameConstants {
     public static final String FLAG_HOUSE = "house";
     public static final String FLAG_CAR = "car";
     public static final String FLAG_MARRIED = "married";
+    public static final String FLAG_GIRLFRIEND = "girlfriend";
     public static final String FLAG_STOCKS = "stocks";
     public static final String FLAG_JOBLESS = "jobless";
     public static final String FLAG_RSU = "rsu";

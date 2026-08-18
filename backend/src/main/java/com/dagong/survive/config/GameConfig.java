@@ -53,6 +53,15 @@ public class GameConfig {
         return new GameEngine(gameData, properties, null);
     }
 
+    @Bean
+    public org.springframework.web.client.RestTemplate restTemplate() {
+        org.springframework.http.client.SimpleClientHttpRequestFactory factory =
+                new org.springframework.http.client.SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(4000);
+        factory.setReadTimeout(20000);
+        return new org.springframework.web.client.RestTemplate(factory);
+    }
+
     private <T> T read(ObjectMapper objectMapper, String path, TypeReference<T> type) throws IOException {
         InputStream in = new ClassPathResource(path).getInputStream();
         try {

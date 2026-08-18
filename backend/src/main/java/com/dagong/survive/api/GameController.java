@@ -85,6 +85,14 @@ public class GameController {
         return ApiResponse.ok(gameService.patrol(userId, gameId, success));
     }
 
+    @PostMapping("/game/{gameId}/chat")
+    public ApiResponse<?> chat(@RequestHeader(GameConstants.HEADER_USER_ID) String userId,
+            @PathVariable String gameId, @RequestBody Map<String, Object> body) {
+        boolean match = Boolean.TRUE.equals(body.get("match"));
+        String text = body.get("text") == null ? "" : String.valueOf(body.get("text"));
+        return ApiResponse.ok(gameService.chat(userId, gameId, text, match));
+    }
+
     @PostMapping("/game/{gameId}/asset")
     public ApiResponse<?> asset(@RequestHeader(GameConstants.HEADER_USER_ID) String userId,
             @PathVariable String gameId, @RequestBody Map<String, String> body) {
